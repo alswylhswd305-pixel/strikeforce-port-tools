@@ -16,4 +16,4 @@ This list is for the owner. It records classes of files that were intentionally 
 - v58 Open Sesame patches (unrelated project).
 - Launchers, test-loop scripts, and example configs were sanitized: absolute machine paths (home directory, EBOOT, dev_flash, local Python, portable LLVM) were replaced with placeholders such as `<TEST_COPY>`, `<SF_ELF>`, `<PS3_DEV_FLASH>`, `<LLVM_BIN>`.
 - Secrets / keys / tokens: scanned before commit; none should be present.
-- An earlier draft LICENSE (AGPL-3.0) was **not** copied; this repo has no license file.
+- The repo is licensed AGPL-3.0 (`LICENSE`, `NOTICE`); ps3recomp-derived patches keep MIT.

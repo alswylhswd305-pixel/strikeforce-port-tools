@@ -16,7 +16,7 @@ Labels used in our notes: **KNOWN** = read in a cited source or confirmed by a r
 - Laws on dumping a disc you own differ by country. Check yours.
 - Do not copy code from RPCS3 or other GPL trees into your port. Read RPCS3 for layouts and behaviour (file:line), then write a clean-room handler, or lift firmware modules from *your* `dev_flash` and keep that output private.
 - Our patches in this repo are our own changes, published as diffs against ps3recomp. Upstream ps3recomp has its own license; follow it when you clone and build that project.
-- This repository itself has **no license file** (all rights reserved) unless the owner later adds one.
+- This repository is licensed **AGPL-3.0** (see `LICENSE` and `NOTICE`); files that modify ps3recomp keep its MIT license.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Author: Saud Alsuwailih (سعود الصويلح)**
 
-Private collection of **tools, patches, and method docs** written while porting *Dynasty Warriors: Strikeforce* (PS3, BLUS30471) to a native Windows build with [ps3recomp](https://github.com/sp00nznet/ps3recomp).
+Public collection of **tools, patches, and method docs** written while porting *Dynasty Warriors: Strikeforce* (PS3, BLUS30471) to a native Windows build with [ps3recomp](https://github.com/sp00nznet/ps3recomp).
 
 The same tools and method are meant to be reused on **another PS3 game you legally own**.
 
@@ -10,9 +10,9 @@ The same tools and method are meant to be reused on **another PS3 game you legal
 
 ## Arabic summary / ملخص عربي
 
-هذا المستودع خاص: فيه الأدوات والتصليحات والشرح اللي كتبناها وإحنا نحوّل اللعبة من PS3 إلى الحاسوب، **بدون أي ملف من اللعبة**. اللاعب لازم تكون عنده نسخته الأصلية القانونية، يحط ملف اللعبة (EBOOT) بنفسه، والأداة تحوّله على جهازه. الدليل الكامل من الألف إلى الياء: `docs/GUIDE_A_TO_Z_ar.md`.
+هذا المستودع عام: فيه الأدوات والتصليحات والشرح اللي كتبناها وإحنا نحوّل اللعبة من PS3 إلى الحاسوب، **بدون أي ملف من اللعبة**. اللاعب لازم تكون عنده نسخته الأصلية القانونية، يحط ملف اللعبة (EBOOT) بنفسه، والأداة تحوّله على جهازه. الدليل الكامل من الألف إلى الياء: `docs/GUIDE_A_TO_Z_ar.md`.
 
-ما فيه رخصة مفتوحة حالياً (كل الحقوق محفوظة).
+الرخصة: AGPL-3.0. أي أحد يقدر يستخدمه ويعدّله، بس إذا نشر نسخته أو شغّلها على النت لازم ينشر كوده بنفس الرخصة. الملفات اللي تعدّل على ps3recomp تبقى على رخصته MIT.
 
 ## What is not in this repository
 
@@ -50,16 +50,10 @@ An earlier writeup covered the first title-screen boot only; that text is kept i
 | `tools/progress/` | Progress counters (counts + sources, not a single %) |
 | `autotester/` | Tester kit: pad driver, teleport, movie guard, npc bot, coverage |
 
-## License
-
-**No license file is included.** All rights reserved, unless the owner later publishes a license.
-
-A November 2026 draft tree briefly carried an AGPL-3.0 text; **that license is not applied here.** Upstream ps3recomp and any third-party tools you clone yourself have their own terms. MIT comparison helpers used on the test loop (from other ports) are **not** copied into this repo; see `tools/testloop/third_party/SOURCES.md` for the upstream URLs if you want to fetch them yourself.
-
 ## Requirements (for someone converting their own game)
 
 You supply, and never commit: your own dump, your decrypted `EBOOT.elf`, and official firmware in your own RPCS3 `dev_flash`. See the A-to-Z guide for the toolchain list (VS 2022 Build Tools, clang-cl, CMake, Ninja, Python, Git).
 
 ## License
 
-AGPL-3.0 (see `LICENSE` and `NOTICE`). Files that modify ps3recomp keep its MIT license.
+**AGPL-3.0** for the author's own work (see `LICENSE` and `NOTICE`). Patches and files that modify ps3recomp keep ps3recomp's MIT license. Upstream ps3recomp and any third-party tools you clone yourself have their own terms; MIT comparison helpers from other ports are **not** copied here (see `tools/testloop/third_party/SOURCES.md`). The license grants no rights to the game, its data, PS3 firmware, or any Sony / KOEI TECMO material.

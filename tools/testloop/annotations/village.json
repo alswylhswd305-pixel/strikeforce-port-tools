@@ -1,0 +1,7 @@
+{
+  "_about": "Extra red boxes for mark.py, per checkpoint ('default' applies to all). Section checks with a region (ground, guard face, sky, UI) are drawn automatically from sections.json. norm = [x, y, w, h] fractions of the client capture; positions are APPROXIMATE (camera at spawn).",
+  "default": [],
+  "spawn": [{"id": "player", "norm": [0.45, 0.10, 0.15, 0.62], "label_ar": "البطل والوشاح", "label_en": "Hero + scarf", "issue": "scarf"}],
+  "after_text": [{"id": "player", "norm": [0.45, 0.10, 0.15, 0.62], "label_ar": "البطل والوشاح", "label_en": "Hero + scarf", "issue": "scarf"}],
+  "idle_60s": [{"id": "player", "norm": [0.45, 0.10, 0.15, 0.62], "label_ar": "البطل والوشاح", "label_en": "Hero + scarf", "issue": "scarf"}]
+}

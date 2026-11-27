@@ -1,0 +1,32 @@
+{
+  "_comment": "Fill this from the RPCS3 RSX capture of the same Lou Sang Village camera, then pass --rpcs3-values. Leave a field out to keep the *(paste)* placeholder. Numbers here are placeholders, not measured values.",
+  "draw": null,
+  "viewport_scale": [null, null, null, null],
+  "viewport_offset": [null, null, null, null],
+  "viewport_rect": [null, null, null, null],
+  "clip_range": [null, null],
+  "zmin_max_control": null,
+  "fp": null,
+  "rt": { "color0": null, "zeta": null, "format": null, "w": null, "h": null },
+  "attribs": [
+    {"index": 0, "enabled": null, "type": null, "type_name": null, "size": null, "stride": null, "offset": null, "frequency": null}
+  ],
+  "c0_c15": [
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null]
+  ]
+}

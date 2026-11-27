@@ -1,0 +1,33 @@
+{
+  "name": "village",
+  "title_ar": "القرية (لو سانغ) - مكان البداية",
+  "title_en": "Lou Sang Village spawn: faces, ground, light shaft, scarf",
+  "verified": true,
+  "state_template": "state_faces",
+  "notes": "Title -> Continue -> file 1 -> Yes (CROSS on menus only), then the village. Movies are guarded: no press while a cellSail movie is open or the frame is letterboxed. Same menu timing as sfrun.ps1 / ringwatch run (20:01).",
+  "max_secs": 720,
+  "steps": [
+    {"do": "wait", "secs": 15},
+    {"do": "press", "mask": "0x0008", "n": 40, "why": "START on the idle title screen"},
+    {"do": "wait", "secs": 10},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: Continue"},
+    {"do": "wait", "secs": 6},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: save file 1"},
+    {"do": "wait", "secs": 5},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: Yes (load)"},
+    {"do": "wait_draws", "min": 150, "hold": 10, "timeout": 420, "why": "village loaded (title draws count stays >= 150)"},
+    {"do": "wait", "secs": 8},
+    {"do": "shot", "name": "spawn", "title_ar": "أول ما يدخل القرية", "issues": ["faces", "shadows", "white_ground", "scarf", "light_shaft"]},
+    {"do": "press", "mask": "0x4000", "n": 20, "guard": true, "why": "CROSS: dismiss the tutorial text if shown (only when no cutscene)"},
+    {"do": "wait", "secs": 5},
+    {"do": "shot", "name": "after_text", "title_ar": "بعد إغلاق رسالة الشرح", "issues": ["faces", "white_ground", "scarf"]},
+    {"do": "press", "mask": "0x0080", "n": 60, "guard": true, "why": "D-pad LEFT: turn the camera"},
+    {"do": "wait", "secs": 4},
+    {"do": "shot", "name": "camera_left", "title_ar": "الكاميرا لليسار", "issues": ["white_ground", "light_shaft", "shadows"]},
+    {"do": "press", "mask": "0x0020", "n": 120, "guard": true, "why": "D-pad RIGHT: turn the camera the other way"},
+    {"do": "wait", "secs": 4},
+    {"do": "shot", "name": "camera_right", "title_ar": "الكاميرا لليمين", "issues": ["white_ground", "light_shaft", "shadows"]},
+    {"do": "wait", "secs": 40, "why": "idle: watch for a stall"},
+    {"do": "shot", "name": "idle_60s", "title_ar": "بعد دقيقة واقف", "issues": ["freeze", "scarf"]}
+  ]
+}

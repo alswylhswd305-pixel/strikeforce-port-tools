@@ -1,0 +1,22 @@
+diff --git a/libs/spurs/cellSpurs.c b/libs/spurs/cellSpurs.c
+index 1d3c7272..98eaa4f9 100644
+--- a/libs/spurs/cellSpurs.c
++++ b/libs/spurs/cellSpurs.c
+@@ -2546,7 +2546,7 @@ s32 cellSpursEventFlagWait(CellSpursEventFlag* eventFlag, u16* bits,
+      * one — that is the signal naming the workload that is not executing.
+      * SPURS_EF_FORCE=1 restores the old fake for A/B comparison only. */
+     static int s_force = -1;
+-    if (s_force < 0) s_force = getenv("SPURS_EF_FORCE") ? 1 : 0;
++    if (s_force < 0) { const char* fe = getenv("SPURS_EF_FORCE"); s_force = fe ? (atoi(fe) > 1 ? atoi(fe) : 1000) : 0; } /* planD: value = waits (2ms each) before faking */
+     unsigned waits = 0;
+     u16 current;
+     __atomic_add_fetch(&s_ef_ppu_waiters, 1, __ATOMIC_SEQ_CST);
+@@ -2577,7 +2577,7 @@ s32 cellSpursEventFlagWait(CellSpursEventFlag* eventFlag, u16* bits,
+                     fflush(stderr);
+                 }
+             }
+-            if (s_force && waits >= 1000) {
++            if (s_force && waits >= (unsigned)s_force) { static unsigned _nf = 0; if (_nf++ < 6 || (_nf % 1000) == 0)
+                 fprintf(stderr, "[cellSpurs] EventFlagWait: SPURS_EF_FORCE -- faking pattern "
+                                 "0x%04X (NOT real; A/B only)\n", pattern);
+                 vm_write16(ea + EF_EVENTS, (u16)(current | pattern));

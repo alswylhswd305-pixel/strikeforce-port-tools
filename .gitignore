@@ -1,0 +1,79 @@
+# Local env and secrets
+**/env.local.ps1
+**/.env
+**/.env.*
+**/*secret*
+**/*token*
+**/.vscode/
+**/.idea/
+
+# Python / build junk
+**/__pycache__/
+**/.venv/
+**/*.pyc
+**/*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Binaries and debug
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+*.lib
+*.obj
+*.o
+*.a
+
+# Game data, firmware, lifted output (never commit)
+**/EBOOT*
+**/*.elf
+**/*.self
+**/*.iso
+**/PARAM.SFO
+**/*.sfo
+**/dev_flash/
+**/dev_hdd0/
+**/dev_hdd1/
+**/dev_bdvd/
+**/PS3_GAME/
+**/recompiled/
+**/port/recompiled/
+**/*.sprx
+**/*.prx
+**/*.pkg
+**/*.bin
+**/*.at3
+**/*.pam
+**/*.pamf
+**/*.gtf
+**/*.dds
+**/*.p3ss
+
+# Dumps, captures, recordings of the game
+*.dmp
+*.minidump
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.mp4
+*.wav
+*.flac
+*.webm
+*.log
+
+# Archives
+*.zip
+*.7z
+*.rar
+*.tgz
+*.tar
+*.tar.gz
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

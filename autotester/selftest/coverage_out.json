@@ -1,0 +1,48 @@
+{
+ "log": "/workspace/sf-autotester/selftest/sample_stderr.log",
+ "parsed_at": "2026-11-27T19:01:27",
+ "hle_log_lines": 4,
+ "unique_nids": 2,
+ "unique_nid_lr_pairs": 2,
+ "nids": [
+  {
+   "nid": "0x7E4A4A49",
+   "name": "cellAdecQueryAttr",
+   "lrs": {
+    "0x00ABCDEF": 5
+   },
+   "calls": 5
+  },
+  {
+   "nid": "0x847D2380",
+   "name": "cellAdecClose",
+   "lrs": {
+    "0x00AB0000": 3
+   },
+   "calls": 3
+  }
+ ],
+ "guest_functions": [],
+ "movies": [
+  "cellSail/cellPamf movie player registered (12 functions)",
+  "CreateDescriptor /dev_bdvd/PS3_GAME/USRDIR/movie000.pam -> ok",
+  "PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)",
+  "frame 1: mean RGB-luma 228.0, mid-row Y 200.0 (decoder 1280x720 stride 1280 hpad 0 len 100)",
+  "PlayerStop at clock 8.00",
+  "PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)",
+  "PlayerStop at clock 6.00",
+  "PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)",
+  "PlayerStop at clock 40.00",
+  "PlayerFinalize self=0x1234"
+ ],
+ "pad_presses": [
+  "0x0008"
+ ],
+ "stubs": [],
+ "hle_hook_present": true,
+ "new_since_last_run": {
+  "nids": [],
+  "guest_functions": [],
+  "prev": null
+ }
+}

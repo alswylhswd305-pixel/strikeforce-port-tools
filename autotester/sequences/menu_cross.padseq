@@ -1,0 +1,5 @@
+# Confirm a menu item with CROSS. Only safe on a known menu (not a cutscene).
+# Call this after a screenshot/log check, not blindly during story scenes.
+meta name=menu_cross
+press CROSS 12
+sleep 0.8

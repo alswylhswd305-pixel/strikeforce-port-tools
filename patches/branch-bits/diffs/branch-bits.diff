@@ -1,0 +1,107 @@
+--- a/rsx_vp_decompiler.c	2026-11-27 19:06:27.532701110 +0300
++++ b/rsx_vp_decompiler.c	2026-11-27 19:06:27.536701107 +0300
+@@ -153,6 +153,23 @@
+     return 0;
+ }
+ 
++/* The transform branch bits a program actually tests: bit D3[23:27] of every
++ * BRB/CLB up to the end bit. A caller that bakes the outcomes (see BRB below)
++ * keys the compiled program on (bits & mask), so a program with no BRB/CLB
++ * keeps its old key and bits it never tests do not multiply variants. */
++u32 rsx_vp_branch_bits_mask(const u8* ucode, u32 max_bytes)
++{
++    u32 mask = 0;
++    if (!ucode) return 0;
++    for (u32 off = 0; off + 16 <= max_bytes; off += 16) {
++        const u32 sca_op = (rd_le(ucode + off + 4) >> 27) & 0x1Fu;
++        const u32 d3 = rd_le(ucode + off + 12);
++        if (sca_op == 0x11 || sca_op == 0x12) mask |= 1u << ((d3 >> 23) & 0x1Fu);   /* BRB, CLB */
++        if (d3 & 1u) break;                                                        /* D3.end */
++    }
++    return mask;
++}
++
+ /* BRA BRI CAL CLI RET BRB CLB (scalar opcodes). */
+ static int vp_is_flow(u32 sca_op)
+ {
+--- a/rsx_vp_decompiler.h	2026-11-27 19:06:27.532701110 +0300
++++ b/rsx_vp_decompiler.h	2026-11-27 19:06:27.536701107 +0300
+@@ -132,6 +132,8 @@
+  * program that rsx_vp_uses_branch_bits() must be keyed on them too. */
+ void rsx_vp_set_branch_bits(u32 bits);
+ int rsx_vp_uses_branch_bits(const u8* ucode, u32 max_bytes);
++/* Mask of the branch bits the program's BRB/CLB test (0 = none). */
++u32 rsx_vp_branch_bits_mask(const u8* ucode, u32 max_bytes);
+ 
+ /* Bit N in vtex_mask declares NV40 2D vertex-texture unit N at t(16+N),
+  * sampler sN, and turns TXL for that unit into SampleLevel(..., LOD 0).
+--- a/rsx_d3d12_backend.c	2026-11-27 19:06:27.532701110 +0300
++++ b/rsx_d3d12_backend.c	2026-11-27 19:06:27.536701107 +0300
+@@ -1924,6 +1924,20 @@
+     return h ? h : 1u;
+ }
+ 
++/* SET_TRANSFORM_BRANCH_BITS (0x1FF8) for this program: the decompiler bakes
++ * every BRB/CLB outcome into the HLSL (rsx_vp_decompiler.c s_vp_branch_bits),
++ * so the bits the program tests are part of its identity. Only tested bits
++ * count; a program with no BRB/CLB, or bits 0, keeps exactly the old key.
++ * VP_BRANCH_BITS_OFF=1 restores the old behaviour (bits always 0). */
++static u32 vp_branch_key_bits(const rsx_state* st, const u8* vuc, u32 vlen)
++{
++    extern u32 rsx_vp_branch_bits_mask(const u8*, u32);
++    static int off = -1;
++    if (off < 0) off = getenv("VP_BRANCH_BITS_OFF") ? 1 : 0;
++    if (off || !st) return 0;
++    return st->transform_branch_bits & rsx_vp_branch_bits_mask(vuc, vlen);
++}
++
+ static int vp_get_vs(const rsx_state* st)
+ {
+     extern int rsx_vp_decompile(const uint8_t*, u32, char*, u32);
+@@ -1948,12 +1962,22 @@
+       const u32 instrs = rsx_vp_program_size_instrs(vuc, vlen);
+       if (instrs) vlen = instrs * 16u; }
+     u32 hash = vp_hash_ucode(vuc, vlen);
++    const u32 ucode_hash = hash;
++    const u32 vp_bb = vp_branch_key_bits(st, vuc, vlen);
++    if (vp_bb) {   /* fold the tested bits into the cache key (and the PSO's vs_hash) */
++        for (int k = 0; k < 4; k++) { hash ^= (vp_bb >> (8 * k)) & 0xFFu; hash *= 16777619u; }
++        if (!hash) hash = 1u;
++    }
+     for (int i = 0; i < s_d3d.vp_vs_n; i++)
+         if (s_d3d.vp_vs[i].hash == hash) return i;
+ 
+     static char hlsl[262144];
++    { extern void rsx_vp_set_branch_bits(u32); rsx_vp_set_branch_bits(vp_bb); }
+     int ni = rsx_vp_decompile(vuc, vlen, hlsl, sizeof hlsl);
++    { extern void rsx_vp_set_branch_bits(u32); rsx_vp_set_branch_bits(0); }   /* other callers stay at 0 */
+     if (ni <= 0) return -1;
++    if (vp_bb) { static int _b = 0; if (PS3_LOG_FIRST(_b, 16))
++        fprintf(stderr, "[VPBB] vp 0x%08X branch bits 0x%08X -> key 0x%08X%c", ucode_hash, vp_bb, hash, 10); }
+     if (getenv("VP_DUMP")) { static int _d=0; if (PS3_LOG_FIRST(_d, 4)) {
+         FILE* f = fopen("vp2_dump.hlsl", _d==1 ? "w" : "a");
+         if (f) { fprintf(f, "/* per-draw VS hash pending, %d instrs */%s%s", ni, hlsl, "\n"); fclose(f); } } }
+@@ -6330,16 +6354,21 @@
+     { extern u32 rsx_vp_program_size_instrs(const u8*, u32);
+       const u32 ins = rsx_vp_program_size_instrs(vuc, vlen); if (ins) vlen = ins * 16u; }
+     const u32 h = vp_hash_ucode(vuc, vlen);
++    const u32 bb = vp_branch_key_bits(st, vuc, vlen);
+     char fn[64];
+-    snprintf(fn, sizeof fn, "faces_vp_%08X.hlsl", h);
++    if (bb) snprintf(fn, sizeof fn, "faces_vp_%08X_b%X.hlsl", h, bb);
++    else    snprintf(fn, sizeof fn, "faces_vp_%08X.hlsl", h);
+     FILE* t = fopen(fn, "rb");
+     if (t) fclose(t);
+     else {
+         static char hl[262144];
++        { extern void rsx_vp_set_branch_bits(u32); rsx_vp_set_branch_bits(bb); }
+         const int ni = rsx_vp_decompile(vuc, vlen, hl, sizeof hl);
++        { extern void rsx_vp_set_branch_bits(u32); rsx_vp_set_branch_bits(0); }
+         FILE* f = fopen(fn, "w");
+         if (f) {
+-            fprintf(f, "/* vp hash 0x%08X start %u, %d instrs, raw ucode:\n", h, st->transform_program_start, ni);
++            fprintf(f, "/* vp hash 0x%08X start %u, %d instrs, branch bits 0x%08X (0x1FF8 = 0x%08X), raw ucode:\n",
++                    h, st->transform_program_start, ni, bb, st->transform_branch_bits);
+             for (u32 k = 0; k + 16 <= vlen; k += 16) {
+                 fprintf(f, "  %3u:", k / 16);
+                 for (u32 j = 0; j < 16; j++) fprintf(f, " %02X", vuc[k + j]);

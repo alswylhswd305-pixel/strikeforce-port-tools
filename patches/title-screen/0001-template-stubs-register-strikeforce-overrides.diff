@@ -1,0 +1,26 @@
+diff --git a/templates/project/stubs.cpp b/templates/project/stubs.cpp
+index c6d6eb2b..bfb5e096 100644
+--- a/templates/project/stubs.cpp
++++ b/templates/project/stubs.cpp
+@@ -15,6 +15,10 @@
+ 
+ #include "ps3emu/ps3types.h"
+ #include "ps3emu/error_codes.h"
++#include "strikeforce_lfqueue.inc"   /* Strikeforce LFQueue port override */
++#include "strikeforce_l10n.inc"      /* Strikeforce cellL10n override */
++#include "strikeforce_knobs.inc"     /* sfauto env knobs */
++#include "strikeforce_videoout.inc"  /* cellVideoOutGetDeviceInfo SDK layout */
+ 
+ /* ---------------------------------------------------------------------------
+  * PRX loading
+@@ -28,6 +32,10 @@
+ 
+ extern "C" void ps3_load_prx_modules(void)
+ {
++    sf_register_lfqueue_overrides();
++    sf_register_l10n_overrides();
++    sf_register_knob_overrides();
++    sf_register_videoout_overrides();
+ }
+ 
+ /* ---------------------------------------------------------------------------

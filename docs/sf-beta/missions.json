@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "updated": "2026-11-27 19:42 Asia/Kuwait (UTC+3)",
+  "canonical_path": "/workspace/sf-beta/missions.json",
+  "notes_ar": [
+    "المهام تقود البوت بهدف، مو بضغطات عمياء. يوقف عند تحقق الهدف أو عند فشل/تعليق، ويطلب لقطة.",
+    "لا تُستخدم إلا عناوين وأنماط موجودة في الملفات. أي نقص = VERIFY.",
+    "بوابة الأفلام وكاشف إعادة الظهور يشتغلون خارج الـ LLM.",
+    "BLUS30471/5443 و5444 = مسار فتح ملف كاش على hdd1، مو إحداثيات بوابة."
+  ],
+  "player_xyz_ea": "0x008D3800",
+  "player_xyz_cite": "sf-autotester/lib/tp_tool.ps1:22 ; data/checkpoints.json:2,13",
+  "missions": [
+    {
+      "id": "M1",
+      "name_ar": "من قرية لو سانغ لبوابة فخ قطاع الطرق — وقف قبل لا تدخل",
+      "name_en": "Lou Sang village to Bandit Trap snow gate, stop before entering",
+      "status": "active",
+      "start_ar": "يُفترض إن البوت يبدأ واللاعب في قرية لو سانغ (أو وصلها بعد الإقلاع والقائمة بالسكربتات الحالية). المهمة: ادخل فخ قطاع الطرق ووصل بوابة الثلج، وقف قبل الدخول.",
+      "goal_ar": "الوصول لبوابة الثلج في Bandit Trap / Northern Plains والوقوف قبل دخولها (لا تعبر، لا تضغط أثناء مقطع).",
+      "timeout_sec": 480,
+      "goal_logic": "any",
+      "goal_conditions": [
+        {
+          "id": "gate_xyz_radius",
+          "type": "xyz_radius",
+          "status": "VERIFY",
+          "point": null,
+          "radius": null,
+          "note_ar": "ما فيه نقطة XYZ محفوظة للبوابة في checkpoints.json (فيه فقط X=6499.8 للقرية، وY/Z ناقصة). في أول تشغيل يحقق الشرط التقريبي أو يقرب من البوابة: tp_tool save-as -Name bandit_trap_gate_approach مع لقطة، وبعدها تُملأ point/radius.",
+          "capture_step": "عند أول توقف (لوق أو قرار يدوي قرب البوابة): اقرأ 0x008D3800، save-as bandit_trap_gate_approach، لقطة، ولا تدخل."
+        },
+        {
+          "id": "cache_5443_5444",
+          "type": "log_pattern",
+          "status": "VERIFY",
+          "match": "any",
+          "patterns": [
+            "BLUS30471/5443",
+            "BLUS30471/5444"
+          ],
+          "cite": [
+            "sf-autotester/data/route_mission1.json:66 — خطوة gate.watch_log مع SPU-HALT و0x31C20 وEventFlagWait وstop_on_hit",
+            "sf-shared/voicefreeze/race_run_spec.md:26 — توصف أسطر [fs] open بأنها Now Loading 5444/5443",
+            "sf-shared/voicefreeze/findings.md:80 — في لوق 17:27: L73753/73763 فتح 5444/5443، ثم لاحقاً L75722 الدخول لـ 0x31C20 وL76797 EventFlagWait BLOCKED",
+            "sf-shared/testloop/voicediag1786_saud_20261127-172741_stderr.log:73753,73763",
+            "sf-shared/testloop/saud_blackhang_1817_stderr.log:71354,71367 — نفس مساري الكاش في جلسة 18:17 أيضاً (تعليق من عائلة ثانية)",
+            "sf-progress/gather_progress.py:32,438 وprogress.json — أرقام كاش بلا خريطة أسماء؛ هذه الدفعة kind=small عند أسطر 71354–71367"
+          ],
+          "what_confirmed_ar": "هذي مسارات ملفات كاش: [fs] open '/dev_hdd1/cache/BLUS30471/5444' و.../5443. العدّة تراقبها في خطوة البوابة. في لوق 17:27 انفتحت قبل تعليق البوابة المعروف بآلاف الأسطر.",
+          "what_verify_ar": "ما ثبت إنها تعني «وصلت البوابة وما دخلت». قد تكون تحميل منطقة عند الاقتراب، أو بعد العبور، أو تحميل عام (ظهرت أيضاً في لوق 18:17). لذلك: إن ظهر أحد النمطين أوقف فوراً، حرّر الأزرار، اطلب لقطة، واحفظ XYZ. لا تكمل المشي. لا تستخدم SPU-HALT/0x31C20 كهدف — هذي فشل/تعليق."
+        }
+      ],
+      "fail_conditions": [
+        {
+          "id": "movie_hang",
+          "type": "movie_hang",
+          "status": "confirmed_pattern",
+          "seconds": 180,
+          "note_ar": "PlayerStart بدون PlayerStop أطول من 180ث (نفس سقف wait_movie_end في boot_to_start.padseq). لا تخطّي."
+        },
+        {
+          "id": "black_screen_movie",
+          "type": "log_pattern",
+          "status": "confirmed_pattern",
+          "patterns": [
+            "frames decoded 0 shown 0"
+          ],
+          "ends_mission": true,
+          "note_ar": "صيغة تقرير فيلم بلا إطارات (مثل movie013 في saud_blackhang_1817_stderr.log:34680). شاشة سوداء داخل اللعب بلا سطر مؤكد = VERIFY، تُغطى بطلب لقطة مع فشل التقدّم/المهلة."
+        },
+        {
+          "id": "hang_gate_or_spu",
+          "type": "log_pattern",
+          "status": "confirmed_pattern",
+          "patterns": [
+            "SPU-HALT",
+            "0x31C20",
+            "EventFlagWait BLOCKED"
+          ],
+          "ends_mission": true,
+          "cite": "route_mission1.json:66 ; findings.md تعليق البوابة",
+          "note_ar": "توقيع تعليق معروف. فشل، مو هدف. اطلب لقطة فوراً."
+        },
+        {
+          "id": "stuck_in_respawn",
+          "type": "stuck_in_respawn",
+          "status": "active",
+          "ends_mission": false,
+          "action": "move_on",
+          "screenshot_request": true,
+          "note_ar": "ارتفاع KO بلا تقدّم موضع (0x008D3800) لـ 45ث: سجّل واطلب لقطة وحوّل التكتيك لـ move نحو البوابة. لا ينهي المهمة وحده. إن استمر بلا تقدّم انظر no_position_progress."
+        },
+        {
+          "id": "hp_zero",
+          "type": "hp_zero",
+          "status": "VERIFY",
+          "ends_mission": true,
+          "note_ar": "يُفعّل فقط إذا confirmed_hp موجودة وhp<=0. العنوان ما زال unconfirmed (godmode_addrs.json:20)."
+        },
+        {
+          "id": "no_position_progress",
+          "type": "no_position_progress",
+          "status": "active",
+          "ends_mission": true,
+          "seconds": 120,
+          "pos_eps": 50,
+          "note_ar": "موضع 0x008D3800 ما تحرك أكثر من pos_eps لمدة 120ث (بعد بداية المهمة). ينهي المهمة ويطلب لقطة."
+        },
+        {
+          "id": "timeout",
+          "type": "timeout",
+          "status": "active",
+          "ends_mission": true,
+          "note_ar": "انتهاء timeout_sec."
+        }
+      ],
+      "stop_rules": {
+        "on_goal": "حرّر pad.txt (ملف فارغ)، لا تضغط، لا تدخل البوابة، اطلب لقطة وصول، احفظ XYZ بـ save-as bandit_trap_gate_approach إن أمكن، أوقف الحلقة.",
+        "on_fail": "حرّر الأزرار، سجّل حدث عطل (المهمة، الوقت Asia/Kuwait، السبب، الدليل)، اطلب لقطة، أوقف الحلقة. لا تتخطّ مقطعاً ولا تستخدم نقل إلا للتشخيص وبأمر منفصل.",
+        "movie_gate": "خارج الـ LLM: لا ضغط أثناء فيلم أو إذا الحالة Unsure.",
+        "stuck_in_respawn": "لا يبقى يقاتل في منطقة إعادة الظهور (B-08، VERIFY قد يكون تصميم). اطلع واتجه للبوابة."
+      },
+      "llm_goal": "Get from Lou Sang village into the Bandit Trap snow stage and approach the snow gate. Stop BEFORE entering or crossing the gate. Do not farm endlessly in the first respawn area; move toward the gate (typically north from S on the minimap). Never press during movies or cutscenes."
+    },
+    {
+      "id": "M2",
+      "name_ar": "كمّل المرحلة (فخ قطاع الطرق للنهاية)",
+      "name_en": "Finish the Bandit Trap stage",
+      "status": "draft_VERIFY",
+      "goal_ar": "هزيمة رئيس القطاع والعودة للقرية (حسب دليل Leyviur). شرط النهاية في الذاكرة/اللوق غير معروف.",
+      "timeout_sec": 900,
+      "goal_conditions": [
+        {
+          "id": "stage_clear_log_or_memory",
+          "type": "log_pattern",
+          "status": "VERIFY",
+          "patterns": [],
+          "note_ar": "اللوق ما يكتب اسم المهمة ولا عدد المهام المكمّلة (progress.md). لا علامة ذاكرة مؤكدة لنهاية المرحلة. يحتاج تشغيل توثيق: سطر لوق أو شاشة أو XYZ عند العودة للقرية."
+        }
+      ],
+      "fail_conditions": [
+        {
+          "id": "movie_hang",
+          "type": "movie_hang",
+          "seconds": 180
+        },
+        {
+          "id": "hang_gate_or_spu",
+          "type": "log_pattern",
+          "patterns": [
+            "SPU-HALT",
+            "0x31C20",
+            "EventFlagWait BLOCKED"
+          ],
+          "ends_mission": true
+        },
+        {
+          "id": "timeout",
+          "type": "timeout",
+          "ends_mission": true
+        }
+      ],
+      "stop_rules": {
+        "on_goal": "حرّر الأزرار، لقطة، أوقف.",
+        "on_fail": "سجّل العطل واطلب لقطة."
+      },
+      "llm_goal": "Draft/VERIFY: finish Bandit Trap (defeat the Bandit Chief and return to the village). Goal detection is not yet implemented; do not invent a completion address."
+    },
+    {
+      "id": "M3",
+      "name_ar": "اذبح الزعيم (رئيس القطاع)",
+      "name_en": "Defeat the Bandit Chief",
+      "status": "draft_VERIFY",
+      "goal_ar": "قتل ضابط/زعيم المرحلة. لا عنوان لصحة العدو ولا لقائمة الأعداء.",
+      "timeout_sec": 720,
+      "goal_conditions": [
+        {
+          "id": "officer_dead",
+          "type": "enemy_hp",
+          "status": "VERIFY",
+          "note_ar": "قائمة الأعداء وصحتهم غير موجودة في الملفات (PLAN §1.3). لا يُشغَّل كهدف حقيقي حتى يُؤكد عنوان."
+        }
+      ],
+      "fail_conditions": [
+        {
+          "id": "hang_gate_or_spu",
+          "type": "log_pattern",
+          "patterns": [
+            "SPU-HALT",
+            "0x31C20",
+            "EventFlagWait BLOCKED"
+          ],
+          "ends_mission": true
+        },
+        {
+          "id": "timeout",
+          "type": "timeout",
+          "ends_mission": true
+        }
+      ],
+      "stop_rules": {
+        "on_goal": "حرّر الأزرار، لقطة للزعيم وهو يسقط.",
+        "on_fail": "سجّل واطلب لقطة."
+      },
+      "llm_goal": "Draft/VERIFY: defeat the officer (Bandit Chief). Enemy HP is unconfirmed; do not invent an address."
+    },
+    {
+      "id": "M4",
+      "name_ar": "روح لحدّاد القرية",
+      "name_en": "Go to the Lou Sang village blacksmith",
+      "status": "draft_VERIFY",
+      "goal_ar": "الوقوف عند الحداد في القرية. ما فيه XYZ محفوظ للحداد (تشغيلات الرسم وقفت عند «Blacksmith prompt» بالكاميرا، بلا إحداثيات ضيف).",
+      "timeout_sec": 300,
+      "goal_conditions": [
+        {
+          "id": "blacksmith_xyz",
+          "type": "xyz_radius",
+          "status": "VERIFY",
+          "point": null,
+          "radius": null,
+          "capture_step": "في القرية قف عند الحداد (نفس إطار bs_prompt إن أمكن)، tp_tool save-as village_blacksmith، لقطة، ثم تُملأ النقطة."
+        }
+      ],
+      "fail_conditions": [
+        {
+          "id": "no_position_progress",
+          "type": "no_position_progress",
+          "seconds": 90,
+          "pos_eps": 50,
+          "ends_mission": true
+        },
+        {
+          "id": "timeout",
+          "type": "timeout",
+          "ends_mission": true
+        }
+      ],
+      "stop_rules": {
+        "on_goal": "حرّر الأزرار، لقطة عند الحداد.",
+        "on_fail": "سجّل واطلب لقطة."
+      },
+      "llm_goal": "Draft/VERIFY: walk to the village blacksmith and stop. No confirmed XYZ yet; wait for a captured checkpoint."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+--- libs/audio/cellAudio.c	2026-11-26 09:08:08.634583644 +0300
++++ libs/audio/cellAudio.c	2026-11-26 09:08:08.650583640 +0300
+@@ -566,12 +566,23 @@
+      * registered notify queue, so the game's audio loop (blocked on
+      * sys_event_queue_receive) wakes once per block and writes the next one.
+      * Resolve the queue by its ipc_key (set via cellAudioSetNotifyEventQueue). */
++    int posted = 0;
+     for (int i = 0; i < CELL_AUDIO_MAX_NOTIFY_EVENT_QUEUES; i++) {
+         if (!s_notify_queues[i].in_use) continue;
+         uint32_t qid = sys_event_find_queue_by_key(s_notify_queues[i].key);
+-        if (qid)
++        if (qid) {
+             sys_event_queue_push_by_id(qid, s_notify_queues[i].key,
+                                        0 /*CELL_AUDIO_EVENT_MIX*/, 0, 0);
++            posted++;
++        }
++    }
++    /* If SetNotify(0) was registered before the remap, or the mixer queue
++     * appeared later, still wake _cellsurMixerMain. */
++    if (!posted) {
++        uint32_t qid = sys_event_find_queue_by_key(CELL_AUDIO_MXR000_KEY);
++        if (qid)
++            sys_event_queue_push_by_id(qid, CELL_AUDIO_MXR000_KEY,
++                                       0 /*CELL_AUDIO_EVENT_MIX*/, 0, 0);
+     }
+ }
+ 
+@@ -1111,10 +1122,22 @@
+     return CELL_OK;
+ }
+ 
++/* libmixer / _cellsurMixerMain creates its notify queue with this key and
++ * calls cellAudioSetNotifyEventQueue(0). Firmware and RPCS3 remap 0 to this
++ * value. Our sys_event_find_queue_by_key(0) returns 0, so leaving the key at
++ * 0 drops every mix event and the port stays silent. */
++#define CELL_AUDIO_MXR000_KEY 0x8000CAFE02460300ull
++
+ s32 cellAudioSetNotifyEventQueue(u64 key)
+ {
+-    printf("[cellAudio] SetNotifyEventQueue(key=0x%llX)\n",
+-           (unsigned long long)key);
++    if (key == 0) {
++        printf("[cellAudio] SetNotifyEventQueue(key=0) remapped to 0x%llX (_mxr000)\n",
++               (unsigned long long)CELL_AUDIO_MXR000_KEY);
++        key = CELL_AUDIO_MXR000_KEY;
++    } else {
++        printf("[cellAudio] SetNotifyEventQueue(key=0x%llX)\n",
++               (unsigned long long)key);
++    }
+ 
+     if (!s_audio_initialized)
+         return CELL_AUDIO_ERROR_NOT_INIT;

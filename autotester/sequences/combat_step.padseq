@@ -1,0 +1,10 @@
+# One short combat burst (walk forward + square + triangle).
+# Mask 0x10000 = stick only; 0x8000 = SQUARE; 0x1000 = TRIANGLE.
+# lx=128 ly=0 is forward (PS3 Y: 0 is up). Hold counts are cellPad reports.
+# The driver will skip every press if a [sf-movie] PlayerStart is in effect.
+meta name=combat_step
+stick 128 0 45
+press SQUARE 12
+press SQUARE 12
+press TRIANGLE 30
+sleep 0.4

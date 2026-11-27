@@ -1,0 +1,22 @@
+{
+  "status": "unconfirmed",
+  "updated": "2026-11-27 18:50 Asia/Kuwait (UTC+3)",
+  "notes": [
+    "Player HP / knockdown writes were not confirmed from existing logs or the 27-Nov hp_hunt.",
+    "hp_hunt.ps1 scanned guest heap 0x10000000..0x18000000 during a fight and listed 7814 decrementing words (hp32.txt). None was proven to be the player's HP. The 0x008D3800 actor/transform region was not in that scan.",
+    "Do not freeze any address until learn mode records a drop while the player is hit, then a restore, on a tester-owned window.",
+    "God mode is a test-copy cheat only (env SF_GODMODE=1 or this poke helper). Never ship it in PLAY_Strikeforce.bat."
+  ],
+  "player_xyz_ea": "0x008D3800",
+  "weak_candidates": [
+    {
+      "ea": "0x101F0754",
+      "kind": "u32",
+      "last_hex": "0x0000017D",
+      "dec_count": 1,
+      "note": "First heap decrement in sfauto/voicediag1786/hp32.txt (value 381). Unconfirmed — could be a timer or someone else's meter."
+    }
+  ],
+  "confirmed_hp": [],
+  "confirmed_knockdown": []
+}

@@ -1,0 +1,57 @@
+{
+  "root": "<TEST_COPY>",
+  "exe": "port\\bld\\MyGameRecomp.exe",
+  "exe_args": ["<SF_ELF>"],
+  "wait_secs": 160,
+  "draw_lo": 0,
+  "draw_hi": 843,
+  "draw_range_env": "DRAW_RANGE",
+  "draw_dump_env": "DRAW_DUMP",
+  "parallel": 1,
+  "baseline": true,
+  "clone_state": true,
+  "window_title_substr": "ps3recomp",
+  "out_dir": "<TEST_COPY>\\sfauto\\gfx_bisect_runs",
+  "state_file": "<TEST_COPY>\\sfauto\\gfx_bisect_runs\\state.json",
+  "rpcs3_values": "<TEST_COPY>\\sfauto\\gfx_bisect_runs\\rpcs3_values.json",
+
+  "base_env": {
+    "PS3_VFS_ROOT": "<TEST_COPY>\\vfs\\dev_bdvd",
+    "PS3_HDD0_ROOT": "<TEST_COPY>\\sfauto\\state\\hdd0",
+    "PS3_HDD1_ROOT": "<TEST_COPY>\\sfauto\\state\\hdd1",
+    "PS3_GAMEDATA_ROOT": "<TEST_COPY>\\sfauto\\state\\gamedata",
+    "PS3_DEV_FLASH": "<PS3_DEV_FLASH>",
+    "PAD_SCRIPT": "PASTE_THE_SCRIPT_THAT_ALREADY_REACHES_LOU_SANG_VILLAGE",
+    "PAD_CLOCK": "flips"
+  },
+
+  "screenshot": {
+    "method": "auto",
+    "window_title_substr": "ps3recomp",
+    "crop": null,
+    "dump_glob": null
+  },
+
+  "compare": { "w": 1280, "h": 720 },
+
+  "regions": {
+    "full":              [0.0, 0.0, 1.0, 1.0],
+    "tent":              [0.15, 0.06, 0.85, 0.48],
+    "ground":            [0.00, 0.58, 1.00, 0.95],
+    "buildings_left":    [0.00, 0.10, 0.28, 0.52],
+    "buildings_right":   [0.72, 0.10, 1.00, 0.55],
+    "top_band":          [0.00, 0.00, 1.00, 0.33],
+    "bottom_band_ground":[0.00, 0.66, 1.00, 1.00]
+  },
+
+  "oracle": {
+    "mode": "auto",
+    "reference": "<TEST_COPY>\\sfauto\\ref_rpcs3\\ref_instage_start_130501.png",
+    "region": "tent",
+    "metric": "mae",
+    "threshold": 0.15,
+    "artifact_if": "above",
+    "crop_ref": null,
+    "crop_ours": null
+  }
+}

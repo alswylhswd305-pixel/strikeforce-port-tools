@@ -1,0 +1,22 @@
+[
+ {
+  "image": "/workspace/sf-autotester/selftest/blank_annotated.png",
+  "source": "/workspace/sf-autotester/selftest/blank.png",
+  "time": "2026-11-27T19:01:27",
+  "boxes": [
+   {
+    "box_xyxy": [
+     100,
+     80,
+     500,
+     400
+    ],
+    "label_ar": "اختبار المختبر: صورة مو سوداء"
+   }
+  ],
+  "labels_ar": [
+   "اختبار المختبر: صورة مو سوداء",
+   "المربع الأحمر يعلّم المنطقة"
+  ]
+ }
+]

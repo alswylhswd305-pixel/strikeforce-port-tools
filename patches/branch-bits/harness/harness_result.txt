@@ -1,0 +1,44 @@
+== gcc (19 warning lines)
+ok:   T1 3F083BFF tested-bit mask 0x7 (want 0x7), 157 instrs
+ok:   T1 6A46C9BA tested-bit mask 0x1 (want 0x1), 46 instrs
+ok:   T1 D54F73A6 tested-bit mask 0x6 (want 0x6), 57 instrs
+ok:   T2 bits=0 HLSL identical to the 1776 dump (46 instrs, 7743 bytes)
+ok:   T3 BRB @14 -> 29 present
+ok:   T3 bits=0: BRB @14 emits '_pc = 29;' (lighting block 15..28 skipped)
+ok:   T3 bits=1: BRB @14 emits '_pc = 15;' (falls into the lighting block)
+ok:   T3 block 15 exists and reads vp_c[466] / vp_c[257]
+ok:   T4 bits=0 -> key == ucode hash 0x6A46C9BA (old behaviour)
+ok:   T4 bits=0x100 (untested) -> key unchanged
+ok:   T4 bits=0x1 -> new key 0x967C6A6B
+ok:   T4 bits=0x101 -> same key as 0x1 (only tested bits)
+ok:   T5 BRB pol(D3[28])=0 bit3=0 -> taken (want taken)
+ok:   T5 BRB pol(D3[28])=0 bit3=1 -> fall-through (want fall-through)
+ok:   T5 BRB pol(D3[28])=1 bit3=0 -> fall-through (want fall-through)
+ok:   T5 BRB pol(D3[28])=1 bit3=1 -> taken (want taken)
+ok:   T6 CLB pol(D3[28])=0 bit3=0 -> taken (want taken)
+ok:   T6 CLB pol(D3[28])=0 bit3=1 -> fall-through (want fall-through)
+ok:   T6 CLB pol(D3[28])=1 bit3=0 -> fall-through (want fall-through)
+ok:   T6 CLB pol(D3[28])=1 bit3=1 -> taken (want taken)
+BRANCH-BITS HARNESS PASS (0 failures)
+== clang (0 warning lines)
+ok:   T1 3F083BFF tested-bit mask 0x7 (want 0x7), 157 instrs
+ok:   T1 6A46C9BA tested-bit mask 0x1 (want 0x1), 46 instrs
+ok:   T1 D54F73A6 tested-bit mask 0x6 (want 0x6), 57 instrs
+ok:   T2 bits=0 HLSL identical to the 1776 dump (46 instrs, 7743 bytes)
+ok:   T3 BRB @14 -> 29 present
+ok:   T3 bits=0: BRB @14 emits '_pc = 29;' (lighting block 15..28 skipped)
+ok:   T3 bits=1: BRB @14 emits '_pc = 15;' (falls into the lighting block)
+ok:   T3 block 15 exists and reads vp_c[466] / vp_c[257]
+ok:   T4 bits=0 -> key == ucode hash 0x6A46C9BA (old behaviour)
+ok:   T4 bits=0x100 (untested) -> key unchanged
+ok:   T4 bits=0x1 -> new key 0x967C6A6B
+ok:   T4 bits=0x101 -> same key as 0x1 (only tested bits)
+ok:   T5 BRB pol(D3[28])=0 bit3=0 -> taken (want taken)
+ok:   T5 BRB pol(D3[28])=0 bit3=1 -> fall-through (want fall-through)
+ok:   T5 BRB pol(D3[28])=1 bit3=0 -> fall-through (want fall-through)
+ok:   T5 BRB pol(D3[28])=1 bit3=1 -> taken (want taken)
+ok:   T6 CLB pol(D3[28])=0 bit3=0 -> taken (want taken)
+ok:   T6 CLB pol(D3[28])=0 bit3=1 -> fall-through (want fall-through)
+ok:   T6 CLB pol(D3[28])=1 bit3=0 -> fall-through (want fall-through)
+ok:   T6 CLB pol(D3[28])=1 bit3=1 -> taken (want taken)
+BRANCH-BITS HARNESS PASS (0 failures)

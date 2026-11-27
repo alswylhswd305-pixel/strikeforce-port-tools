@@ -1,0 +1,9 @@
+[CENSUS] armed: window opens at the first frame end after 3.0 s, 2 frames
+[CENSUS] window open at 3.0 s
+[CENSUS] wrote synthetic_rsx_census.txt: 2 frames, 20 draws
+HARNESS PASS (21 M lines, 20 window draws, 0 failures)
+[CENSUS] armed: window opens at the first frame end after 3.0 s, 2 frames
+[CENSUS] window open at 3.0 s
+[CENSUS] wrote /tmp/c2.txt: 2 frames, 20 draws
+HARNESS PASS (21 M lines, 20 window draws, 0 failures)
+OFF PASS mode=0

@@ -1,0 +1,25 @@
+@echo off
+setlocal
+title [TEST-SALEM] Strikeforce MOVIE v5 PAD (Saud plays)
+set "SF=%~dp0"
+if "%SF:~-1%"=="\" set "SF=%SF:~0,-1%"
+set "PS3_VFS_ROOT=%SF%\vfs\dev_bdvd"
+set "PS3_HDD0_ROOT=%SF%\sfauto\state_ringwatch\hdd0"
+set "PS3_HDD1_ROOT=%SF%\sfauto\state_ringwatch\hdd1"
+set "PS3_GAMEDATA_ROOT=%SF%\sfauto\state_ringwatch\gamedata"
+set "PS3_DEV_FLASH=%SF_LOCAL_PATH%"
+set "PS3_TITLE=[TEST-SALEM] ps3recomp"
+set "PS3_HLE_TOP=0"
+set "SPU_INTERP_UNLIFTED=1"
+set "SPU_INTERP_MISS=1"
+set "OSK_AUTO_TEXT=Saud"
+set "SF_PADMAP=%SF%\Strikeforce_buttons.ini"
+set "PAD_FILE=%SF%\sfauto\ringwatch_work\pad.txt"
+set "ELF=%SF_LOCAL_PATH%"
+if not exist "%SF%\play_cwd" mkdir "%SF%\play_cwd"
+if not exist "%SF%\play_logs" mkdir "%SF%\play_logs"
+for /f %%t in ('powershell -NoProfile -Command "Get-Date -f yyyyMMdd-HHmmss"') do set "TS=%%t"
+cd /d "%SF%\play_cwd"
+"%SF%\sfauto\exe_copies\1786_movie_v5\MyGameRecomp.exe" "%ELF%" 1>"%SF%\play_logs\moviev5_saud_%TS%_stdout.log" 2>"%SF%\play_logs\moviev5_saud_%TS%_stderr.log"
+echo Game exited with code %ERRORLEVEL%.
+endlocal

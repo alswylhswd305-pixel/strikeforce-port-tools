@@ -1,0 +1,18 @@
+--- spu_channels.c	2026-11-27 20:02:32.913367539 +0300
++++ ../patched/spu_channels.c	2026-11-27 20:02:32.909367567 +0300
+@@ -2718,9 +2718,14 @@
+             }
+             yz_lockstep_block_begin(ctx);
+             spu_taskset_parked_add(ts, tid, wobj);
+-            spu_taskset_wait_signal(ts, tid);
++            const int sfx_rc = spu_taskset_wait_signal(ts, tid);
+             spu_taskset_parked_del(ts, tid);
+             yz_lockstep_block_end(ctx);
++            if (sfx_rc == 0x5D) {   /* [sf-spursfix] taskset shut down while parked: end the task */
++                ctx->status = SPU_STATUS_STOPPED_BY_STOP;
++                spu_halt(ctx);
++                return;
++            }
+             spu_ef_deliver_owed(ctx, wobj);
+         }
+         ctx->gpr[3]._u32[0] = 0;

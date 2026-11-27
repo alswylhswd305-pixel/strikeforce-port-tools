@@ -1,0 +1,7 @@
+pillow
+numpy
+mss
+psutil
+opencv-python-headless
+arabic-reshaper
+python-bidi

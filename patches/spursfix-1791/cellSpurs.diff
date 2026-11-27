@@ -1,0 +1,50 @@
+--- cellSpurs.c	2026-11-27 20:02:32.913367539 +0300
++++ ../patched/cellSpurs.c	2026-11-27 20:02:32.909367567 +0300
+@@ -1055,6 +1055,8 @@
+ 
+     if (!spurs_guest_range_valid(taskset_ea, taskset_size))
+         return (s32)0x8041090Du; /* host backing safety, before writes */
++    { extern void spu_taskset_recreate(uint32_t);   /* [sf-spursfix] old tasks out before the rewrite */
++      spu_taskset_recreate(taskset_ea); }
+     taskset = GUEST_PTR(taskset, CellSpursTaskset*);
+     memset(taskset, 0, taskset_size);
+ 
+@@ -1171,8 +1173,10 @@
+ {
+     { extern int sf_life_dump(uint32_t, const char*);   /* [sf-blackhang] log-only; the runtime does nothing else here */
+       const uint32_t sf_ea = (uint32_t)(uintptr_t)taskset;
+-      fprintf(stderr, "[sf-lc] taskset_destroy ts=0x%08X runtime=noop_return_ok\n", sf_ea);
+-      sf_life_dump(sf_ea, "taskset_destroy"); }
++      fprintf(stderr, "[sf-lc] taskset_destroy ts=0x%08X runtime=spursfix_join\n", sf_ea);
++      sf_life_dump(sf_ea, "taskset_destroy");
++      extern void spu_taskset_shutdown_request(uint32_t); extern int spu_taskset_join_wait(uint32_t, const char*);
++      if (sf_ea) { spu_taskset_shutdown_request(sf_ea); spu_taskset_join_wait(sf_ea, "destroy"); } }
+     taskset = GUEST_PTR(taskset, CellSpursTaskset*);
+     if (!taskset)
+         return CELL_SPURS_TASK_ERROR_NULL_POINTER;
+@@ -1185,8 +1189,10 @@
+ {
+     { extern int sf_life_dump(uint32_t, const char*);   /* [sf-blackhang] log-only; the runtime does nothing else here */
+       const uint32_t sf_ea = (uint32_t)(uintptr_t)taskset;
+-      fprintf(stderr, "[sf-lc] taskset_shutdown ts=0x%08X runtime=noop_return_ok\n", sf_ea);
+-      sf_life_dump(sf_ea, "taskset_shutdown"); }
++      fprintf(stderr, "[sf-lc] taskset_shutdown ts=0x%08X runtime=spursfix\n", sf_ea);
++      sf_life_dump(sf_ea, "taskset_shutdown");
++      extern void spu_taskset_shutdown_request(uint32_t);
++      if (sf_ea) spu_taskset_shutdown_request(sf_ea); }
+     taskset = GUEST_PTR(taskset, CellSpursTaskset*);
+     if (!taskset)
+         return CELL_SPURS_TASK_ERROR_NULL_POINTER;
+@@ -1199,8 +1205,10 @@
+ {
+     { extern int sf_life_dump(uint32_t, const char*);   /* [sf-blackhang] log-only; the runtime does nothing else here */
+       const uint32_t sf_ea = (uint32_t)(uintptr_t)taskset;
+-      fprintf(stderr, "[sf-lc] taskset_join ts=0x%08X runtime=noop_return_ok\n", sf_ea);
+-      sf_life_dump(sf_ea, "taskset_join"); }
++      fprintf(stderr, "[sf-lc] taskset_join ts=0x%08X runtime=spursfix_wait\n", sf_ea);
++      sf_life_dump(sf_ea, "taskset_join");
++      extern int spu_taskset_join_wait(uint32_t, const char*);
++      if (sf_ea) spu_taskset_join_wait(sf_ea, "join"); }
+     taskset = GUEST_PTR(taskset, CellSpursTaskset*);
+     if (!taskset)
+         return CELL_SPURS_TASK_ERROR_NULL_POINTER;

@@ -1,0 +1,28 @@
+﻿diff --git a/runtime/ppu/ppu_loader.cpp b/runtime/ppu/ppu_loader.cpp
+index 341b710..3fe54f2 100644
+--- a/runtime/ppu/ppu_loader.cpp
++++ b/runtime/ppu/ppu_loader.cpp
+@@ -3361,6 +3361,7 @@ extern "C" void ppu_unlifted_stub(uint64_t addr, ppu_context* ctx)
+ /* The real lv2 syscall table (runtime/syscalls/lv2_register.c). */
+ extern "C" int lv2_try_syscall(ppu_context* ctx);
+ extern "C" int64_t sys_mmapper_allocate_address(ppu_context* ctx);
++extern "C" int64_t sys_memory_get_user_memory_size(ppu_context* ctx);
+ extern "C" int64_t sys_mmapper_search_map_address(uint32_t start, uint32_t size, uint32_t* out);
+ 
+ /* lv2 syscall dispatch: r11 = syscall number, args in r3.. (PPC ABI).
+@@ -3463,10 +3464,11 @@ extern "C" void lv2_syscall(ppu_context* ctx)
+     switch (num) {
+     case 352: {   /* sys_memory_get_user_memory_size(sys_memory_info_t* info)
+                    * info = { u32 total_user_memory; u32 available_user_memory } */
+-        uint32_t info = (uint32_t)ctx->gpr[3];
+-        if (info) { vm_write32(info + 0, 0x10000000u);   /* 256 MB total */
+-                    vm_write32(info + 4, 0x0C000000u); } /* 192 MB available */
+-        ctx->gpr[3] = 0;
++        /* [sf-port] report what sys_memory.c tracks (213 MB total, available =
++         * total - allocated). The fixed 192 MB 'available' made Strikeforce ask
++         * for (192-6) MB after already holding 81 MB -> ENOMEM -> its main heap
++         * stayed empty -> every operator new returned NULL. */
++        ctx->gpr[3] = (uint64_t)sys_memory_get_user_memory_size(ctx);
+         return;
+     }
+     case 330: {   /* sys_mmapper_allocate_address(u64 size, u64 flags,

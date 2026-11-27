@@ -1,0 +1,9 @@
+# Open the title screen after the three opening movies, then press START.
+# Do not add any press before wait_movie_end — the driver also refuses
+# presses while a movie is active or the movie state is unsure.
+# Usage: replay.ps1 -Seq sequences/boot_to_start.padseq -Log <stderr.log>
+meta name=boot_to_start
+wait_movie_end 180
+sleep 1.5
+press START 8
+sleep 2

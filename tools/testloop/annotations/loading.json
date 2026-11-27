@@ -1,0 +1,5 @@
+{
+  "_about": "Extra boxes for the loading route. Approximate.",
+  "default": [],
+  "loading_90s": [{"id": "screen", "norm": [0.02, 0.02, 0.96, 0.96], "label_ar": "شاشة التحميل", "label_en": "Now Loading screen", "issue": "freeze"}]
+}

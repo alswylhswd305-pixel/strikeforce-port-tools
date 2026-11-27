@@ -1,0 +1,29 @@
+PASS  riff header 6ch+smpl: ba 1712, data_start 168
+PASS  riff header no smpl: data_start 100
+PASS  oma header: frame bytes (raw+1)*8 = 1712, data after 96-byte EA3
+PASS  frame start byte check
+PASS  delta ok
+PASS  delta constant -> wrong data_start
+PASS  delta growing -> wrong frame size
+PASS  delta k*(frame_2ch-frame_6ch) -> stride mixup
+PASS  delta uses other stream frame size -> stride mixup
+PASS  delta step -> dropped add
+PASS  legacy header inference -> 1712 with data_off 168/100
+PASS  zero-fill signature + chunk-sized episode (77 frames)
+PASS  random-like signature
+PASS  hashfile round trip
+PASS  clean stream: nothing confirmed
+PASS  recomputed write pointer -> confirmed
+PASS  rejected add -> confirmed
+PASS  seek without flush -> confirmed
+PASS  seek with flush -> ruled out
+PASS  late ring write (add snapshot before read lands) -> confirmed, re-read matches file
+PASS  [atrac-diag] lines parsed: rejected add confirmed, pointers consistent
+PASS  hash compare names the real source frame
+PASS  grid constant delta -> header confirmed
+PASS  hostcmp finds zeros + moved bytes with the true delta
+PASS  channel swap detected vs reference (ch0<->ch4)
+PASS  silent + clipped channels flagged
+PASS  clean PCM vs reference: no flags
+
+27/27 passed

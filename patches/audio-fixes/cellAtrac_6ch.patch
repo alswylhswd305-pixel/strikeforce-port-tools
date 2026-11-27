@@ -1,0 +1,53 @@
+--- libs/codec/cellAtrac.c	2026-11-26 08:19:20.519523676 +0300
++++ libs/codec/cellAtrac.c	2026-11-26 09:07:14.198908806 +0300
+@@ -30,6 +30,7 @@
+ #define AT3P_SAMPLES   2048
+ #define AT3P_DELAY     0x170
+ #define ATRAC_MAX_SLOTS 16
++#define ATRAC_MAX_CH    8
+ #define ATRAC_HOST_MAX  (64u * 1024u * 1024u)
+ 
+ typedef struct {
+@@ -48,7 +49,7 @@
+     s32 loop_num;              /* -1 forever, 0 none, n more laps */
+     s32 next_frame;            /* frame the decoder expects next */
+     s32 pcm_frame;             /* frame held in pcm[], -1 = none */
+-    float pcm[2][AT3P_SAMPLES];
++    float pcm[ATRAC_MAX_CH][AT3P_SAMPLES];
+     /* Streaming ring (guest) + linear host copy of bytes fed so far. */
+     u8* host;
+     u32 host_cap;
+@@ -103,7 +104,9 @@
+         }
+         o += 8 + cs;
+     }
+-    if (!t->data_off || !t->block_align || t->channels < 1 || t->channels > 2)
++    /* Strikeforce BGM is ATRAC3plus 5.1 (6 ch, block_align 1712). The old
++     * cap of 2 channels rejected every track with ILLEGAL_DATA (0x80610315). */
++    if (!t->data_off || !t->block_align || t->channels < 1 || t->channels > ATRAC_MAX_CH)
+         return (int)CELL_ATRAC_ERROR_ILLEGAL_DATA;
+     const s32 stream = (s32)(t->data_bytes / t->block_align) * AT3P_SAMPLES;
+     t->first = (s32)off1 + AT3P_DELAY;
+@@ -157,7 +160,10 @@
+         if (!frame_is_fed(s, s->next_frame)) return -1;
+         const u32 at = s->t.data_off + (u32)s->next_frame * s->t.block_align;
+         int n = 0;
+-        if (at3p_decode(s->dec, s->pcm[0], s->pcm[1], &n, s->file + at,
++        float* planes[ATRAC_MAX_CH];
++        int c;
++        for (c = 0; c < ATRAC_MAX_CH; c++) planes[c] = s->pcm[c];
++        if (at3p_decode(s->dec, planes, &n, s->file + at,
+                         (int)s->t.block_align) < 0 || n != AT3P_SAMPLES) {
+             /* A bad frame decodes as silence rather than ending the track. */
+             memset(s->pcm, 0, sizeof(s->pcm));
+@@ -234,7 +240,9 @@
+     AtracTrackInfo t;
+     int rc = atrac_parse_riff(guest, uiReadByte, &t);
+     if (rc) {
+-        fprintf(stderr, "[cellAtrac] SetData: not an ATRAC3plus file (0x%08X)\n", (u32)rc);
++        fprintf(stderr, "[cellAtrac] SetData: parse failed rc=0x%08X bytes=%u ch=%u ba=%u data_off=%u hex=%02X %02X %02X %02X %02X %02X %02X %02X\n",
++                (u32)rc, uiReadByte, t.channels, t.block_align, t.data_off,
++                guest[0], guest[1], guest[2], guest[3], guest[4], guest[5], guest[6], guest[7]);
+         return rc;
+     }
+ 

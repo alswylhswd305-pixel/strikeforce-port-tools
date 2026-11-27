@@ -1,0 +1,34 @@
+{
+  "pairs": [
+    {
+      "name": "p88_vs_rpcs3_instage",
+      "ours": "/workspace/sf-shots/p88_restart_150s.jpg",
+      "ref": "/workspace/sf-shots/rpcs3/ref_instage_start_130501.png",
+      "photo": "no"
+    },
+    {
+      "name": "live1822_snap406_vs_rpcs3",
+      "ours": "/workspace/sf-shared/freeze-1555/live_1822/snap_182406_client.png",
+      "ref": "/workspace/sf-shots/rpcs3/ref_instage_start_130501.png",
+      "photo": "no"
+    },
+    {
+      "name": "live1822_look_vs_rpcs3",
+      "ours": "/workspace/sf-shared/freeze-1555/live_1822/look_1826.jpg",
+      "ref": "/workspace/sf-shots/rpcs3/ref_instage_start_130501.png",
+      "photo": "no"
+    },
+    {
+      "name": "tv_photo_1511_vs_rpcs3",
+      "ours": "/workspace/sf-shared/saud_tv_photo_1511.jpg",
+      "ref": "/workspace/sf-shots/rpcs3/ref_instage_start_130501.png",
+      "photo": "yes"
+    },
+    {
+      "name": "player_face_1826_vs_rpcs3_instage",
+      "ours": "/workspace/sf-shared/freeze-1555/live_1822/player_face_1826.jpg",
+      "ref": "/workspace/sf-shots/rpcs3/ref_instage_start_130501.png",
+      "photo": "no"
+    }
+  ]
+}

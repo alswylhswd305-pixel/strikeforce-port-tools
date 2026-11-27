@@ -1,0 +1,49 @@
+{
+  "_about": "Render sections (أقسام). A draw from the FACES_CTL 'list' dump ([FCL] lines in stderr) goes to the FIRST section whose rule matches (order matters). Rule keys (all optional, all must match): fp, vp (lists of hex), rt, z (hex), dt, dm, bl (0/1), idx [first,last], tex (substring of the texture list). Rules come from the 1760 village frame 7091 list (sfauto\\faces_work\\fcl_d0.txt) and the faces/white-ground work: sky quad #380 fp 0x0E466801 / vp 0x8C73534A; terrain candidates #288-348; shadow-map pass = rt 0 + z 0x003A0000 (the 1024x1024 fB0 texture receivers sample). Character/effect/UI hashes are LIKELY, not proven. 'crop' = [x,y,w,h] fractions of the client shot used for the section picture and image match. Edit freely; no code change needed.",
+  "match_tol": 12,
+  "match_scale": 0.25,
+  "sections": [
+    {"id": "shadows", "ar": "الظلال", "en": "Shadows",
+     "crop": [0.25, 0.55, 0.65, 0.42],
+     "rules": [{"rt": "0x00000000", "z": "0x003A0000"}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "مرحلة رسم خريطة الظل موجودة", "fail_ar": "ما فيه رسم لخريطة الظل"},
+       {"type": "uses_texture", "tex": "fB0/1024x1024", "n": 1, "ar": "الأشياء تقرأ خريطة الظل", "fail_ar": "ولا رسمة تقرأ خريطة الظل"}
+     ]},
+    {"id": "sky", "ar": "السماء", "en": "Sky",
+     "crop": [0.0, 0.0, 1.0, 0.32],
+     "rules": [{"fp": ["0x0E466801"]}, {"vp": ["0x8C73534A"]}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "رسمة السماء موجودة (#380)", "fail_ar": "رسمة السماء مفقودة"},
+       {"type": "region_content", "norm": [0.05, 0.0, 0.9, 0.25], "min_colors": 64, "ar": "السماء فيها تفاصيل", "fail_ar": "السماء لون واحد"}
+     ]},
+    {"id": "ground", "ar": "الأرض", "en": "Ground / terrain",
+     "crop": [0.0, 0.58, 1.0, 0.42],
+     "rules": [{"fp": ["0x0E467781", "0x0E467501", "0x0E467281", "0x0E466F01"]}, {"idx": [288, 348]}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "رسمات الأرض موجودة (288-348)", "fail_ar": "رسمات الأرض مفقودة"},
+       {"type": "region_not_white", "norm": [0.03, 0.62, 0.40, 0.33], "l50_min": 200, "sat_max": 0.18, "ar": "الأرض مو بيضاء", "fail_ar": "الأرض بيضاء: التضاريس ما تنرسم والسماء طالعة مكانها"}
+     ]},
+    {"id": "characters", "ar": "الشخصيات", "en": "Characters",
+     "crop": [0.35, 0.05, 0.52, 0.90],
+     "rules": [{"vp": ["0x3F083BFF", "0xD5208C20"]}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "رسمات الشخصيات موجودة", "fail_ar": "رسمات الشخصيات مفقودة"},
+       {"type": "region_not_dark", "norm": [0.70, 0.30, 0.12, 0.20], "l50_max": 45, "ar": "وجه الحارس مو غامق (مكان تقريبي)", "fail_ar": "وجه الحارس غامق"}
+     ]},
+    {"id": "effects", "ar": "المؤثرات", "en": "Effects (light shaft, post-FX)",
+     "crop": [0.0, 0.0, 1.0, 1.0],
+     "rules": [{"fp": ["0x0E466581", "0x0E466401", "0x0C3A6501", "0x0C3A6281", "0x0E464D01"]}, {"dt": 0, "tex": "fA5/"}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "رسمات المؤثرات وما بعد المعالجة موجودة", "fail_ar": "ما فيه رسمات مؤثرات"},
+       {"type": "not_measured", "ar": "عمود الضوء", "fail_ar": "عمود الضوء ما ينقاس بعد (ما نعرف مكانه في الصورة)"}
+     ]},
+    {"id": "ui", "ar": "الواجهة", "en": "UI / HUD",
+     "crop": [0.0, 0.0, 0.34, 0.16],
+     "rules": [{"vp": ["0xB8CBE1FC"]}, {"fp": ["0x0D3AF801"]}],
+     "checks": [
+       {"type": "draws_min", "n": 1, "ar": "رسمات الواجهة موجودة", "fail_ar": "رسمات الواجهة مفقودة"},
+       {"type": "region_content", "norm": [0.02, 0.02, 0.30, 0.12], "min_colors": 64, "ar": "اسم المكان ظاهر فوق يسار", "fail_ar": "اسم المكان مو ظاهر"}
+     ]}
+  ]
+}

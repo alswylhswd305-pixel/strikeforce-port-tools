@@ -1,0 +1,705 @@
+{
+  "generated_at": "2026-11-27 18:35 Asia/Kuwait (UTC+3)",
+  "rule_ar": "ما فيه نسبة واحدة لـ«كم خلصت اللعبة». كل رقم إما معدود من مصدر، أو مكتوب غير مؤكد.",
+  "game": {
+    "title_ar": "داينستي ووريورز: سترايك فورس",
+    "title_en": "Dynasty Warriors: Strikeforce",
+    "serial": "BLUS30471"
+  },
+  "story": {
+    "force_and_chapter": "Shu Chapter 1",
+    "force_and_chapter_source": "/workspace/sf-shared/testloop/saud_blackhang_1817_stderr.log السطر 9613",
+    "completed_mission_count": null,
+    "completed_mission_count_status": "uncertain",
+    "completed_mission_count_note_ar": "اللوق ما يكتب اسم المهمة ولا عدد المهام المكمّلة. ما نقدر نحول وصول سعود إلى نسبة من 272 أو من 7.",
+    "all_quests_total": 272,
+    "all_quests_total_checks_out": true,
+    "breakdown_sum": 272,
+    "breakdown": [
+      {
+        "id": "ch1",
+        "label_ar": "الفصل 1 (الثلاث قوى)",
+        "count": 21,
+        "unique_per_force": 7
+      },
+      {
+        "id": "ch2",
+        "label_ar": "الفصل 2 (الثلاث قوى)",
+        "count": 24,
+        "unique_per_force": 8
+      },
+      {
+        "id": "ch3",
+        "label_ar": "الفصل 3 مع مهام نان جونغ",
+        "count": 27,
+        "note_ar": "مهام نان جونغ الثلاث تُحسب مرة واحدة، لا ثلاث مرات"
+      },
+      {
+        "id": "ch4",
+        "label_ar": "الفصل 4 (مهام خاصة بكل قوة)",
+        "count": 33
+      },
+      {
+        "id": "ch5",
+        "label_ar": "الفصل 5 (مهام خاصة بكل قوة)",
+        "count": 36
+      },
+      {
+        "id": "ch6",
+        "label_ar": "الفصل 6 (الثلاث قوى)",
+        "count": 24,
+        "unique_per_force": 8
+      },
+      {
+        "id": "crossover",
+        "label_ar": "مهام التقاطع",
+        "count": 13
+      },
+      {
+        "id": "gaiden",
+        "label_ar": "مهام جانبية",
+        "count": 52
+      },
+      {
+        "id": "legends",
+        "label_ar": "مهام الأساطير (المبارزة)",
+        "count": 42
+      }
+    ],
+    "chapter1_unique_for_one_force": 7,
+    "quest_sources": [
+      "https://www.trueachievements.com/a62934/invincible-general-achievement",
+      "https://www.neoseeker.com/dynasty-warriors-strikeforce/faqs/192378-walkthrough.html",
+      "https://gamefaqs.gamespot.com/ps3/974378-dynasty-warriors-strikeforce/faqs",
+      "https://www.trueachievements.com/a62934/invincible-general-achievement"
+    ],
+    "today_events_ar": [
+      "عدا البوابة",
+      "ذبح زعيم",
+      "وصل القرية",
+      "علّق التحميل بعد مهمة القرية (آخر شاشة سوداء)"
+    ],
+    "today_events_source_ar": "كلام سعود في جلسة اللعب، مع لوق الجلسة.",
+    "likely_mission_ar": "فخ قطاع الطرق (Bandit Trap)",
+    "likely_mission_status": "uncertain",
+    "likely_mission_note_ar": "أول طلب في الفصل 1 هو «فخ قطاع الطرق» (Bandit Trap): فيه بوابة تنفتح بعد قتل الجنود، وبعدها زعيم اسمه رئيس القطاع، ثم العودة للقرية. هذا من دليل Leyviur المعروض على GameFAQs وعلى Neoseeker. تعليق البوابة السابق اتسمى على هالمهمة في findings.md. اللوق الحالي ما فيه اسم المهمة مكتوباً، وآخر ملفات الكاش كانت أرقاماً بدون خريطة أسماء.",
+    "last_cache_ids": [
+      "1508",
+      "1509"
+    ],
+    "area_load_bursts": 4,
+    "play_log": "/workspace/sf-shared/testloop/saud_blackhang_1817_stderr.log"
+  },
+  "movies": {
+    "total": 46,
+    "total_source_ar": "جرد مجلد أفلام اللعبة المستخدم في هذا المشروع (movie000 إلى movie045). المجلد نفسه مو موجود على هذا الجهاز، فالسكربت يعيد العد إن انعطيت مسار المجلد.",
+    "verified_working": 3,
+    "verified_ids": [
+      "movie000",
+      "movie001",
+      "movie002"
+    ],
+    "verified_source": "/workspace/movie1786/shots/v5_annotations.json",
+    "verified_build": "1786_movie_v5",
+    "untested": 43,
+    "ratio_verified_over_total": "3/46",
+    "this_session_opened": [
+      {
+        "id": "movie000",
+        "first_line": 937,
+        "last_line": 3517,
+        "frames_decoded": 181,
+        "frames_shown": 181,
+        "clock_s": 6.17,
+        "last_report_kind": "close",
+        "rms": "0.0000,0.0000",
+        "picture_shown": true,
+        "sound_nonzero_rms": false,
+        "played_through": true,
+        "report_count": 2
+      },
+      {
+        "id": "movie001",
+        "first_line": 3534,
+        "last_line": 4348,
+        "frames_decoded": 132,
+        "frames_shown": 120,
+        "clock_s": 2.02,
+        "last_report_kind": "close",
+        "rms": "0.1189,0.0967,0.1694,0.0573,0.0420,0.0381",
+        "picture_shown": true,
+        "sound_nonzero_rms": true,
+        "played_through": false,
+        "report_count": 2
+      },
+      {
+        "id": "movie007",
+        "first_line": 9985,
+        "last_line": 34647,
+        "frames_decoded": 1968,
+        "frames_shown": 1962,
+        "clock_s": 65.47,
+        "last_report_kind": "close",
+        "rms": "0.0780,0.0826,0.1052,0.0126,0.0209,0.0213",
+        "picture_shown": true,
+        "sound_nonzero_rms": true,
+        "played_through": true,
+        "report_count": 2
+      },
+      {
+        "id": "movie013",
+        "first_line": 34665,
+        "last_line": 34691,
+        "frames_decoded": 0,
+        "frames_shown": 0,
+        "clock_s": 0.0,
+        "last_report_kind": "close",
+        "rms": "0.0000,0.0000,0.0000,0.0000,0.0000,0.0000",
+        "picture_shown": false,
+        "sound_nonzero_rms": false,
+        "played_through": false,
+        "report_count": 2
+      }
+    ],
+    "this_session_played_through": [
+      "movie000",
+      "movie007"
+    ],
+    "this_session_opened_zero_frames": [
+      "movie013"
+    ]
+  },
+  "code": {
+    "converted": 6444,
+    "converted_total": 6444,
+    "ratio": "6444/6444",
+    "source": "/workspace/sf-shared/progress-src/out/EBOOT.functions.json",
+    "source_mtime_kuwait": "2026-11-26 09:01 Asia/Kuwait (UTC+3)",
+    "executed_in_play": null,
+    "executed_in_play_status": "uncertain",
+    "executed_in_play_note_ar": "ما فيه بيانات تغطية تعدّ كم دالة من هالـ 6444 اشتغلت فعلاً وقت اللعب. المختبر الآلي مطلوب عشان يجيب هذا العد."
+  },
+  "hle": {
+    "linked": 248,
+    "stub": 48,
+    "missing": 40,
+    "conditional": 7,
+    "partial": 3,
+    "total": 346,
+    "ratio_linked_over_total": "248/346",
+    "parts_sum_equals_total": true,
+    "source": "/workspace/sf-shared/nid-autolink/pc-results/autolink_line.txt",
+    "source_mtime_kuwait": "2026-11-27 17:19 Asia/Kuwait (UTC+3)",
+    "v2_present": true,
+    "v2_changed_counts": false,
+    "v2_callgraph_imports": 346,
+    "v2_callgraph_functions": 6444,
+    "note_ar": "أحدث تصنيف موجود هو تقرير 27 نوفمبر 2026 الساعة 17:19 بتوقيت الكويت (nid_autolink.py الإصدار 1.0): 248 مربوطة، 48 هيكل فارغ، 40 ناقصة، 7 مشروطة، 3 ناقصة جزئياً، من أصل 346. مجلد v2 بتاريخ 17:50 فيه رسم استدعاءات (346 استيراد، 6444 دالة) واختبار ذاتي، وما غيّر أرقام التصنيف."
+  },
+  "audio_in_play_log": {
+    "cellatrac_lines": 267,
+    "channel_unit_extension": 19,
+    "frame_ch_config": 105,
+    "invalid_start_bit": 92,
+    "invalid_units": 10,
+    "wl_index": 4,
+    "invalid_gain": 9,
+    "invalid_quant_units": 4,
+    "setdata": 22,
+    "other": 2
+  },
+  "blockers": [
+    {
+      "id": "village_load_freeze",
+      "title_ar": "تعليق التحميل بعد مهمة القرية",
+      "status_ar": "مفتوح — هذه أهم عقبة الحين",
+      "tone": "danger",
+      "done": false,
+      "source_ar": "جلسة سعود ولوق /workspace/sf-shared/testloop/saud_blackhang_1817_stderr.log. آخر ملفات الكاش: 1508, 1509. ما فيه تقرير كراش من ويندوز."
+    },
+    {
+      "id": "gate_freeze_root",
+      "title_ar": "سبب تعليق البوابة (الأصل)",
+      "status_ar": "مفتوح — سعود عدا البوابة اليوم، بس الأصل ما تأكد. تجربة SF_RACE ما اكتملت",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "/workspace/sf-shared/voicefreeze/findings.md"
+    },
+    {
+      "id": "atrac_extension",
+      "title_ar": "فك الصوت ناقص (الصوت الخفيف)",
+      "status_ar": "مفتوح — اللوق يسجّل ميزة ناقصة اسمها توسعة قناة الصوت",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "نفس لوق الجلسة: رسالة Channel unit extension تكررت 19 مرة، مع أخطاء فك أخرى."
+    },
+    {
+      "id": "graphics",
+      "title_ar": "الرسم: الوجوه والظلال والضباب",
+      "status_ar": "مفتوح — مشاهد من اللعب والمقارنة مع المحاكي",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "ملاحظات الرسم السابقة (الوجوه، الظلال، الضباب) ما انحلّت بهالجلسة."
+    },
+    {
+      "id": "cloth",
+      "title_ar": "القماش (الشال) ما يتحرك طبيعي",
+      "status_ar": "مفتوح",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "قائمة مشاكل سعود السابقة، وصور الشال الثابت."
+    },
+    {
+      "id": "stutter",
+      "title_ar": "تقطيع الحركة (تهنيق)",
+      "status_ar": "مفتوح — سعود يحس فيه، والمتوسط ما يبيّن التقطيع القصير",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "ملاحظة سعود في جلسة اللعب. عداد النافذة متوسط، مو قياس تقطيع."
+    },
+    {
+      "id": "movies_untested",
+      "title_ar": "أفلام داخل المراحل ما تجرّبت (43 من 46)",
+      "status_ar": "مفتوح — الثلاث اللي بأول اللعبة انحلّت في نسخة 1786_movie_v5",
+      "tone": "warning",
+      "done": false,
+      "source_ar": "/workspace/movie1786/shots/v5_annotations.json"
+    }
+  ],
+  "next_ar": [
+    "حل تعليق التحميل بعد مهمة القرية، هذا اللي يمنع إكمال المرحلة.",
+    "إكمال تجربة SF_RACE عشان يتأكد سبب تعليق البوابة، حتى لو انعدت اليوم.",
+    "إصلاح فك الصوت الناقص (توسعة قناة الصوت) عشان كلام الشخصيات ما يبقى خفيف.",
+    "متابعة الرسم: الوجوه والظلال والضباب.",
+    "تحريك القماش.",
+    "قياس التقطيع بعد ما يخف اللوق الثقيل.",
+    "تجربة باقي الأفلام لما نقدر نلعب المراحل.",
+    "تشغيل المختبر الآلي عشان يعدّ الدوال اللي اشتغلت فعلاً وقت اللعب."
+  ],
+  "inputs": {
+    "play_log": {
+      "path": "/workspace/sf-shared/testloop/saud_blackhang_1817_stderr.log",
+      "exists": true,
+      "status": "counted",
+      "mtime_kuwait": "2026-11-27 18:18 Asia/Kuwait (UTC+3)",
+      "bytes": 9584103,
+      "lines": 109558,
+      "story_hits": [
+        {
+          "line": 9613,
+          "text": "Story: Shu Chapter 1\""
+        }
+      ],
+      "player_hits": [
+        {
+          "line": 9611,
+          "text": "[sf-l10n] UCS2stoUTF8s(src=0xDF2FF388 len=53 cap=1023) -> rc=0 out=53 \"Player: Saud"
+        }
+      ],
+      "movies_opened": [
+        {
+          "id": "movie000",
+          "first_line": 937,
+          "last_line": 3517,
+          "frames_decoded": 181,
+          "frames_shown": 181,
+          "clock_s": 6.17,
+          "last_report_kind": "close",
+          "rms": "0.0000,0.0000",
+          "picture_shown": true,
+          "sound_nonzero_rms": false,
+          "played_through": true,
+          "report_count": 2
+        },
+        {
+          "id": "movie001",
+          "first_line": 3534,
+          "last_line": 4348,
+          "frames_decoded": 132,
+          "frames_shown": 120,
+          "clock_s": 2.02,
+          "last_report_kind": "close",
+          "rms": "0.1189,0.0967,0.1694,0.0573,0.0420,0.0381",
+          "picture_shown": true,
+          "sound_nonzero_rms": true,
+          "played_through": false,
+          "report_count": 2
+        },
+        {
+          "id": "movie007",
+          "first_line": 9985,
+          "last_line": 34647,
+          "frames_decoded": 1968,
+          "frames_shown": 1962,
+          "clock_s": 65.47,
+          "last_report_kind": "close",
+          "rms": "0.0780,0.0826,0.1052,0.0126,0.0209,0.0213",
+          "picture_shown": true,
+          "sound_nonzero_rms": true,
+          "played_through": true,
+          "report_count": 2
+        },
+        {
+          "id": "movie013",
+          "first_line": 34665,
+          "last_line": 34691,
+          "frames_decoded": 0,
+          "frames_shown": 0,
+          "clock_s": 0.0,
+          "last_report_kind": "close",
+          "rms": "0.0000,0.0000,0.0000,0.0000,0.0000,0.0000",
+          "picture_shown": false,
+          "sound_nonzero_rms": false,
+          "played_through": false,
+          "report_count": 2
+        }
+      ],
+      "atrac": {
+        "cellatrac_lines": 267,
+        "channel_unit_extension": 19,
+        "frame_ch_config": 105,
+        "invalid_start_bit": 92,
+        "invalid_units": 10,
+        "wl_index": 4,
+        "invalid_gain": 9,
+        "invalid_quant_units": 4,
+        "setdata": 22,
+        "other": 2
+      },
+      "unresolved_nids": {
+        "0xA8AFA7D4": 1
+      },
+      "trophy_thread_lines": [
+        51046,
+        97434,
+        105620
+      ],
+      "voice_bin_opens": [
+        {
+          "line": 71836,
+          "text": "[fs] open '/dev_bdvd/PS3_GAME/USRDIR/Data/Sound/Voice.bin' -> fd 5"
+        }
+      ],
+      "halt_lines": [],
+      "fs_opens": 382,
+      "unique_paths": 213,
+      "cache_bursts": [
+        {
+          "start_line": 337,
+          "end_line": 739,
+          "opens": 71,
+          "unique_ids": 49,
+          "first_ids": [
+            "5246",
+            "5247",
+            "5248",
+            "5249",
+            "5250",
+            "5251",
+            "5241",
+            "5242"
+          ],
+          "last_ids": [
+            "0025",
+            "0019",
+            "0022",
+            "0023",
+            "3823",
+            "3824",
+            "3825",
+            "0026"
+          ],
+          "kind": "area_load"
+        },
+        {
+          "start_line": 4362,
+          "end_line": 4362,
+          "opens": 1,
+          "unique_ids": 1,
+          "first_ids": [
+            "0027"
+          ],
+          "last_ids": [
+            "0027"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 6887,
+          "end_line": 6899,
+          "opens": 8,
+          "unique_ids": 8,
+          "first_ids": [
+            "0001",
+            "0006",
+            "0017",
+            "0014",
+            "0015",
+            "0016",
+            "0018",
+            "0031"
+          ],
+          "last_ids": [
+            "0001",
+            "0006",
+            "0017",
+            "0014",
+            "0015",
+            "0016",
+            "0018",
+            "0031"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 7637,
+          "end_line": 8006,
+          "opens": 5,
+          "unique_ids": 4,
+          "first_ids": [
+            "4709",
+            "4752",
+            "4710",
+            "4753"
+          ],
+          "last_ids": [
+            "4709",
+            "4752",
+            "4710",
+            "4753"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 34658,
+          "end_line": 35922,
+          "opens": 88,
+          "unique_ids": 88,
+          "first_ids": [
+            "5050",
+            "4667",
+            "0044",
+            "0034",
+            "0035",
+            "3802",
+            "3803",
+            "3804"
+          ],
+          "last_ids": [
+            "3612",
+            "3613",
+            "3614",
+            "3615",
+            "6720",
+            "6719",
+            "1508",
+            "1509"
+          ],
+          "kind": "area_load"
+        },
+        {
+          "start_line": 36950,
+          "end_line": 36951,
+          "opens": 2,
+          "unique_ids": 2,
+          "first_ids": [
+            "2611",
+            "2612"
+          ],
+          "last_ids": [
+            "2611",
+            "2612"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 47303,
+          "end_line": 48326,
+          "opens": 102,
+          "unique_ids": 102,
+          "first_ids": [
+            "5053",
+            "0047",
+            "0246",
+            "3802",
+            "3803",
+            "3564",
+            "3560",
+            "3561"
+          ],
+          "last_ids": [
+            "2611",
+            "2612",
+            "3576",
+            "3279",
+            "3280",
+            "3590",
+            "3777",
+            "5142"
+          ],
+          "kind": "area_load"
+        },
+        {
+          "start_line": 49455,
+          "end_line": 49466,
+          "opens": 2,
+          "unique_ids": 2,
+          "first_ids": [
+            "5448",
+            "5447"
+          ],
+          "last_ids": [
+            "5448",
+            "5447"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 71354,
+          "end_line": 71367,
+          "opens": 2,
+          "unique_ids": 2,
+          "first_ids": [
+            "5444",
+            "5443"
+          ],
+          "last_ids": [
+            "5444",
+            "5443"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 87836,
+          "end_line": 87851,
+          "opens": 2,
+          "unique_ids": 2,
+          "first_ids": [
+            "5446",
+            "5445"
+          ],
+          "last_ids": [
+            "5446",
+            "5445"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 102694,
+          "end_line": 102694,
+          "opens": 1,
+          "unique_ids": 1,
+          "first_ids": [
+            "4625"
+          ],
+          "last_ids": [
+            "4625"
+          ],
+          "kind": "small"
+        },
+        {
+          "start_line": 106794,
+          "end_line": 107958,
+          "opens": 91,
+          "unique_ids": 91,
+          "first_ids": [
+            "4667",
+            "0044",
+            "0034",
+            "0035",
+            "3802",
+            "3803",
+            "3804",
+            "3564"
+          ],
+          "last_ids": [
+            "3612",
+            "3613",
+            "3614",
+            "3615",
+            "6720",
+            "6719",
+            "1508",
+            "1509"
+          ],
+          "kind": "area_load"
+        }
+      ],
+      "area_load_bursts": 4,
+      "last_cache_ids": [
+        "1508",
+        "1509"
+      ],
+      "last_area_load": {
+        "start_line": 106794,
+        "end_line": 107958,
+        "opens": 91,
+        "unique_ids": 91,
+        "first_ids": [
+          "4667",
+          "0044",
+          "0034",
+          "0035",
+          "3802",
+          "3803",
+          "3804",
+          "3564"
+        ],
+        "last_ids": [
+          "3612",
+          "3613",
+          "3614",
+          "3615",
+          "6720",
+          "6719",
+          "1508",
+          "1509"
+        ],
+        "kind": "area_load"
+      }
+    },
+    "functions": {
+      "count": 6444,
+      "status": "counted",
+      "source": "/workspace/sf-shared/progress-src/out/EBOOT.functions.json",
+      "mtime_kuwait": "2026-11-26 09:01 Asia/Kuwait (UTC+3)",
+      "bytes": 630788
+    },
+    "hle_raw": {
+      "linked": 248,
+      "stub": 48,
+      "missing": 40,
+      "conditional": 7,
+      "partial": 3,
+      "total": 346,
+      "source": "/workspace/sf-shared/nid-autolink/pc-results/autolink_line.txt",
+      "v2_present": true,
+      "v2_changed_counts": false,
+      "status": "counted",
+      "source_mtime_kuwait": "2026-11-27 17:19 Asia/Kuwait (UTC+3)",
+      "summary_crosscheck": {
+        "linked": 248,
+        "partial": 3,
+        "stub": 48,
+        "conditional": 7,
+        "missing": 40,
+        "total": 346
+      },
+      "summary_matches": true,
+      "v2_files": [
+        "callgraph.json",
+        "log_search.txt",
+        "run_lines.txt",
+        "selftest_v2.txt"
+      ],
+      "v2_callgraph_imports": 346,
+      "v2_callgraph_functions": 6444,
+      "parts_sum_equals_total": true
+    },
+    "movie_dir": {
+      "count": null,
+      "status": "not_provided",
+      "source": null
+    }
+  }
+}

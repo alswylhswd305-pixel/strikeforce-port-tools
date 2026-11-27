@@ -1,0 +1,66 @@
+{
+  "as_of_note": "Static reference data for the progress meter. Counts that come from logs are computed by gather_progress.py, not stored here as live values.",
+  "game": {
+    "title_ar": "داينستي ووريورز: سترايك فورس",
+    "title_en": "Dynasty Warriors: Strikeforce",
+    "serial": "BLUS30471"
+  },
+  "quests": {
+    "complete_all_quests_total": 272,
+    "complete_all_quests_includes_three_factions": true,
+    "high_difficulty_versions_counted": false,
+    "source_name_ar": "قائمة المهام لإنجاز «الجنرال الذي لا يُقهر» (إكمال كل المهام)، كتبها Rowdawg88 بتاريخ 6 سبتمبر 2012",
+    "source_url": "https://www.trueachievements.com/a62934/invincible-general-achievement",
+    "source_caveat_ar": "عدّ مجتمعي وليس قائمة رسمية من الشركة. الكاتب طلب التصحيح إن نقص شيء. جمّعنا الأرقام الفرعية فتطابق المجموع 272.",
+    "breakdown": [
+      {"id": "ch1", "label_ar": "الفصل 1 (الثلاث قوى)", "count": 21, "unique_per_force": 7},
+      {"id": "ch2", "label_ar": "الفصل 2 (الثلاث قوى)", "count": 24, "unique_per_force": 8},
+      {"id": "ch3", "label_ar": "الفصل 3 مع مهام نان جونغ", "count": 27, "note_ar": "مهام نان جونغ الثلاث تُحسب مرة واحدة، لا ثلاث مرات"},
+      {"id": "ch4", "label_ar": "الفصل 4 (مهام خاصة بكل قوة)", "count": 33},
+      {"id": "ch5", "label_ar": "الفصل 5 (مهام خاصة بكل قوة)", "count": 36},
+      {"id": "ch6", "label_ar": "الفصل 6 (الثلاث قوى)", "count": 24, "unique_per_force": 8},
+      {"id": "crossover", "label_ar": "مهام التقاطع", "count": 13},
+      {"id": "gaiden", "label_ar": "مهام جانبية", "count": 52},
+      {"id": "legends", "label_ar": "مهام الأساطير (المبارزة)", "count": 42}
+    ],
+    "chapter1_unique_for_one_force": {
+      "count": 7,
+      "battle_quests": ["Yellow Turban Menace", "Yellow Turban Fortress", "Yellow Turban Rebellion"],
+      "requests": ["Bandit Trap", "Officer Pursuit", "Lost Belongings", "Surprise Attack"],
+      "battle_quests_ar": ["تهديد العمامات الصفراء", "حصن العمامات الصفراء", "ثورة العمامات الصفراء"],
+      "requests_ar": ["فخ قطاع الطرق", "مطاردة الضباط", "المفقودات", "هجوم مفاجئ"],
+      "sources": [
+        "https://www.trueachievements.com/a62934/invincible-general-achievement",
+        "https://www.neoseeker.com/dynasty-warriors-strikeforce/faqs/192378-walkthrough.html",
+        "https://gamefaqs.gamespot.com/ps3/974378-dynasty-warriors-strikeforce/faqs"
+      ],
+      "first_request_note_ar": "أول طلب في الفصل 1 هو «فخ قطاع الطرق» (Bandit Trap): فيه بوابة تنفتح بعد قتل الجنود، وبعدها زعيم اسمه رئيس القطاع، ثم العودة للقرية. هذا من دليل Leyviur المعروض على GameFAQs وعلى Neoseeker."
+    }
+  },
+  "movies": {
+    "documented_total": 46,
+    "documented_range": "movie000.pam–movie045.pam",
+    "documented_total_source_ar": "جرد مجلد أفلام اللعبة المستخدم في هذا المشروع (movie000 إلى movie045). المجلد نفسه مو موجود على هذا الجهاز، فالسكربت يعيد العد إن انعطيت مسار المجلد.",
+    "verified_in_1786_movie_v5": [
+      {"id": "movie000", "note_ar": "شعار الشركة. صورة ظاهرة، اشتغل لين النهاية، ملف الصوت صامت (ذروة 0)."},
+      {"id": "movie001", "note_ar": "شعار أوميغا فورس. صورة وصوت، 299 صورة انعرضت في اختبار v5."},
+      {"id": "movie002", "note_ar": "المقطع السينمائي الطويل. صورة وصوت، وصل بعدها لشاشة البداية بدون تعليق."}
+    ],
+    "v5_build": "1786_movie_v5",
+    "v5_md5": "E41A5A94725045155439770EE70087C7",
+    "v5_evidence": "/workspace/movie1786/shots/v5_annotations.json"
+  },
+  "code": {
+    "guest_functions_total": 6444,
+    "guest_functions_source": "/workspace/sf-shared/progress-src/out/EBOOT.functions.json",
+    "guest_functions_source_note_ar": "عدد واصفات الدوال في ملف التحويل، وهو 6444، ويطابق سطر محمّل اللعبة: OPD descriptors / unique functions: 6444. تاريخ النسخة على الصندوق: 26 نوفمبر 2026، 09:01 بتوقيت الكويت.",
+    "executed_coverage": null,
+    "executed_coverage_note_ar": "ما فيه بيانات تغطية تعدّ كم دالة من هالـ 6444 اشتغلت فعلاً وقت اللعب. المختبر الآلي مطلوب عشان يجيب هذا العد."
+  },
+  "hle": {
+    "report_dir": "/workspace/sf-shared/nid-autolink/pc-results",
+    "prefer_v2_dir": "/workspace/sf-shared/nid-autolink/pc-results/v2",
+    "classification_source_note_ar": "أحدث تصنيف موجود هو تقرير 27 نوفمبر 2026 الساعة 17:19 بتوقيت الكويت (nid_autolink.py الإصدار 1.0): 248 مربوطة، 48 هيكل فارغ، 40 ناقصة، 7 مشروطة، 3 ناقصة جزئياً، من أصل 346. مجلد v2 بتاريخ 17:50 فيه رسم استدعاءات (346 استيراد، 6444 دالة) واختبار ذاتي، وما غيّر أرقام التصنيف."
+  },
+  "default_play_log": "/workspace/sf-shared/testloop/saud_blackhang_1817_stderr.log"
+}

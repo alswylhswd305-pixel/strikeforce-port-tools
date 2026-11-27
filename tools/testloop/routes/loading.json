@@ -1,0 +1,33 @@
+{
+  "name": "loading",
+  "title_ar": "طلعة من القرية إلى شاشة Now Loading (تجريبي)",
+  "title_en": "Leave the village to reach Now Loading (EXPERIMENTAL, not verified)",
+  "verified": false,
+  "state_template": "state_faces",
+  "notes": "EXPERIMENTAL. Nobody has scripted the way out of the village yet (run B got there with Saud's own controller). This walks with the left stick (PAD_FILE mask 0x10000 = stick only) toward the gate and waits for the draws count to drop (a load screen). If it never drops, the report says 'did not reach Now Loading' - it is not a hang.",
+  "max_secs": 900,
+  "steps": [
+    {"do": "wait", "secs": 15},
+    {"do": "press", "mask": "0x0008", "n": 40, "why": "START on the idle title screen"},
+    {"do": "wait", "secs": 10},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: Continue"},
+    {"do": "wait", "secs": 6},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: save file 1"},
+    {"do": "wait", "secs": 5},
+    {"do": "press", "mask": "0x4000", "n": 40, "why": "CROSS: Yes (load)"},
+    {"do": "wait_draws", "min": 150, "hold": 10, "timeout": 420, "why": "village loaded"},
+    {"do": "wait", "secs": 8},
+    {"do": "press", "mask": "0x4000", "n": 20, "guard": true, "why": "dismiss tutorial text"},
+    {"do": "wait", "secs": 4},
+    {"do": "shot", "name": "village", "title_ar": "القرية قبل الطلعة", "issues": ["white_ground"]},
+    {"do": "walk", "lx": 128, "ly": 0, "n": 240, "repeat": 6, "guard": true, "until_draws_below": 60, "why": "walk forward (stick up) toward the gate"},
+    {"do": "shot", "name": "walk_end", "title_ar": "بعد المشي", "issues": []},
+    {"do": "wait_draws_below", "max": 60, "timeout": 20, "why": "a load screen has few draws"},
+    {"do": "wait", "secs": 10},
+    {"do": "shot", "name": "loading_10s", "title_ar": "شاشة التحميل بعد 10 ثواني", "issues": ["freeze"]},
+    {"do": "wait", "secs": 30},
+    {"do": "shot", "name": "loading_40s", "title_ar": "شاشة التحميل بعد 40 ثانية", "issues": ["freeze"]},
+    {"do": "wait", "secs": 50},
+    {"do": "shot", "name": "loading_90s", "title_ar": "بعد 90 ثانية: هل علّق؟", "issues": ["freeze"]}
+  ]
+}

@@ -1,0 +1,14 @@
+diff --git a/templates/project/main.cpp b/templates/project/main.cpp
+index 6d30a6a7..012f8b6e 100644
+--- a/templates/project/main.cpp
++++ b/templates/project/main.cpp
+@@ -462,6 +462,9 @@ int main(int argc, char** argv)
+     printf("[boot] VFS root: %s\n", ppu_vfs_root);
+ 
+     ppu_recomp_register();   /* lifted function table -> address map */
++#ifdef _WIN32
++    { extern void ps3_sampler_start(void); ps3_sampler_start(); }  /* [sf-port] sampler: PS3_SAMPLE=<ms> */
++#endif
+     ps3_load_prx_modules();  /* this game's lifted system PRX, if it has any */
+     ppu_hle_init();          /* firmware import NID -> HLE handlers */
+     ppu_sysprx_register();   /* boot-critical CRT */

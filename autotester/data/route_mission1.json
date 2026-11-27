@@ -1,0 +1,71 @@
+{
+  "id": "mission1_boot_to_gate",
+  "title_ar": "المهمة الأولى: من الإقلاع إلى البوابة",
+  "title_en": "First mission: boot to the gate (current freeze)",
+  "timezone": "Asia/Kuwait (UTC+3)",
+  "notes": [
+    "Opening movies: no pad. wait_movie_end watches [sf-movie] PlayerStart/Stop.",
+    "In-engine story cutscenes often have no [sf-movie] line — those steps use pad:none and a wait. If unsure, do not press.",
+    "Teleport slots are empty until TELEPORT_SAVE fills checkpoints.json (only X=6499.8 is known, Y/Z missing).",
+    "The PC port still freezes at the gate before later story movies. The route stops there and reports.",
+    "PAD sequences live under sequences/ and also /workspace/sf-shared/replay/sequences/."
+  ],
+  "steps": [
+    {
+      "id": "boot_movies",
+      "kind": "movie",
+      "label_ar": "الأفلام الثلاثة في بداية اللعبة",
+      "label_en": "Three opening movies",
+      "pad": "none",
+      "seq": "sequences/boot_to_start.padseq",
+      "note": "boot_to_start.padseq itself waits for movie end, then presses START. The tester must not send any other press until that wait succeeds."
+    },
+    {
+      "id": "title_start",
+      "kind": "menu",
+      "label_ar": "شاشة PRESS START",
+      "label_en": "PRESS START",
+      "pad": "included-in-boot_to_start",
+      "shot": true
+    },
+    {
+      "id": "main_menu",
+      "kind": "menu",
+      "label_ar": "القائمة الرئيسية (CROSS فقط إذا تأكدنا إنها قائمة)",
+      "label_en": "Main menu — CROSS only if a menu is confirmed",
+      "seq": "sequences/menu_cross.padseq",
+      "require": "movie-idle",
+      "shot": true,
+      "note": "If the screen might be a cutscene or the demo-loop restarting movies, skip this press."
+    },
+    {
+      "id": "in_game_or_unknown",
+      "kind": "gameplay",
+      "label_ar": "داخل اللعب أو مش غير مؤكد",
+      "label_en": "Gameplay if confirmed, else stop",
+      "pad": "none-if-unsure",
+      "teleport": null,
+      "shot": true
+    },
+    {
+      "id": "combat_if_ingame",
+      "kind": "combat",
+      "label_ar": "قتال قصير إذا كنا داخل المهمة",
+      "label_en": "Short combat burst if in the mission",
+      "seq": "sequences/combat_step.padseq",
+      "require": "movie-idle",
+      "godmode_learn": true,
+      "shot": true
+    },
+    {
+      "id": "gate",
+      "kind": "observe",
+      "label_ar": "البوابة — نقطة التعليق المعروفة",
+      "label_en": "Gate — known freeze point",
+      "pad": "none",
+      "watch_log": ["SPU-HALT", "0x31C20", "BLUS30471/5443", "BLUS30471/5444", "EventFlagWait"],
+      "shot": true,
+      "stop_on_hit": true
+    }
+  ]
+}

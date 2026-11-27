@@ -1,0 +1,24 @@
+{
+  "player_xyz_ea": "0x008D3800",
+  "y_boost_on_go": 5,
+  "mirrors_follow": [
+    "0x008D3860",
+    "0x008D38B0",
+    "0x008D38F0",
+    "0x00905120",
+    "0x14600080",
+    "0x14800090",
+    "0x16A1D9F0"
+  ],
+  "evidence": "tp_tool / TELEPORT_SAVE+GO on 1786_voicediag, 2026-11-27 17:25-17:26 Asia/Kuwait (UTC+3). Writing X/Y/Z at 0x008D3800 moved the player +300 on X; position held; minimap changed (teleport_test_annotations.json).",
+  "checkpoints": [
+    {
+      "id": "village_x6499_partial",
+      "label_ar": "قرية — اختبار النقل (X فقط مؤكد)",
+      "label_en": "Village teleport test (X only confirmed)",
+      "xyz": [6499.8, null, null],
+      "status": "partial",
+      "evidence": "Annotation before-teleport X=6499.8, after X=6799.8. Y and Z were not written down. Do not goto this point until TELEPORT_SAVE fills Y/Z on a tester run."
+    }
+  ]
+}

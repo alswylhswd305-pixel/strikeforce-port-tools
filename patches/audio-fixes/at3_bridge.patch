@@ -1,0 +1,48 @@
+diff --git a/third_party/at3_standalone/at3_bridge.cpp b/third_party/at3_standalone/at3_bridge.cpp
+index 519a0dda..9bd79ae6 100644
+--- a/third_party/at3_standalone/at3_bridge.cpp
++++ b/third_party/at3_standalone/at3_bridge.cpp
+@@ -5,9 +5,10 @@
+ extern "C" void* at3p_open(int channels, int* block_align) { return atrac3p_alloc(channels, block_align); }
+ extern "C" void  at3p_close(void* dec) { atrac3p_free((ATRAC3PContext*)dec); }
+ extern "C" void  at3p_flush(void* dec) { atrac3p_flush_buffers((ATRAC3PContext*)dec); }
+-extern "C" int   at3p_decode(void* dec, float* left, float* right, int* samples,
++extern "C" int   at3p_decode(void* dec, float** planes, int* samples,
+                              const uint8_t* frame, int frame_bytes)
+ {
+-    float* out[2] = { left, right };
+-    return atrac3p_decode_frame((ATRAC3PContext*)dec, out, samples, frame, frame_bytes);
++    /* atrac3p_decode_frame is typed float*[2] but indexes all configured
++     * channels (up to 8). The [2] decays to float** so this is safe. */
++    return atrac3p_decode_frame((ATRAC3PContext*)dec, planes, samples, frame, frame_bytes);
+ }
+diff --git a/third_party/at3_standalone/at3_bridge.h b/third_party/at3_standalone/at3_bridge.h
+index fa1d8e3a..babc0461 100644
+--- a/third_party/at3_standalone/at3_bridge.h
++++ b/third_party/at3_standalone/at3_bridge.h
+@@ -10,7 +10,9 @@ void  at3p_close(void* dec);
+ void  at3p_flush(void* dec);
+ /* Decodes one frame into planar float (right unused for mono). Returns bytes
+  * consumed or < 0 on error; *samples gets the per-channel count. */
+-int   at3p_decode(void* dec, float* left, float* right, int* samples,
++/* planes[] must have as many entries as the stream's channel count (1..8).
++ * The decoder writes planar float, 2048 samples per channel. */
++int   at3p_decode(void* dec, float** planes, int* samples,
+                   const uint8_t* frame, int frame_bytes);
+ #ifdef __cplusplus
+ }
+diff --git a/third_party/at3_stub/at3_stub.c b/third_party/at3_stub/at3_stub.c
+index c05fb57f..861e4e1e 100644
+--- a/third_party/at3_stub/at3_stub.c
++++ b/third_party/at3_stub/at3_stub.c
+@@ -7,8 +7,8 @@
+ void* at3p_open(int channels, int* block_align) { (void)channels; (void)block_align; return NULL; }
+ void  at3p_close(void* dec) { (void)dec; }
+ void  at3p_flush(void* dec) { (void)dec; }
+-int   at3p_decode(void* dec, float* left, float* right, int* samples, const uint8_t* frame, int frame_bytes)
++int   at3p_decode(void* dec, float** planes, int* samples, const uint8_t* frame, int frame_bytes)
+ {
+-    (void)dec; (void)left; (void)right; (void)samples; (void)frame; (void)frame_bytes;
++    (void)dec; (void)planes; (void)samples; (void)frame; (void)frame_bytes;
+     return -1;
+ }

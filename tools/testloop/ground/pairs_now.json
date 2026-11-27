@@ -1,0 +1,77 @@
+[
+ {
+  "name": "village_spawn_1760",
+  "rpcs3": "reference/rpcs3/village_start.png",
+  "rpcs3_label": "village start, 13:05",
+  "port": "runs/00000000-000000_selftest_village/shots/spawn.png",
+  "port_label": "1760_faces_fix",
+  "title_ar": "القرية أول ما يدخل: نفس المكان، الكاميرا مو نفس الزاوية بالضبط",
+  "title_en": "village spawn: same place, camera not identical"
+ },
+ {
+  "name": "snow_battlefield_1780_a",
+  "rpcs3": null,
+  "port": "../saud_play_rec/20261126-2111/play_0001_client.png",
+  "port_label": "1780_shadowfix, Saud play 21:11",
+  "title_ar": "ساحة المعركة الثلجية (لعب سعود)",
+  "title_en": "snow battlefield (Saud's play)",
+  "boxes": [
+   [
+    0.25,
+    0.8,
+    0.72,
+    0.17
+   ],
+   [
+    0.03,
+    0.6,
+    0.94,
+    0.17
+   ]
+  ]
+ },
+ {
+  "name": "snow_battlefield_1780_b",
+  "rpcs3": null,
+  "port": "../saud_play_rec/20261126-2111/play_0004_client.png",
+  "port_label": "1780_shadowfix, Saud play 21:12",
+  "title_ar": "ساحة المعركة الثلجية: أرض مفتوحة",
+  "title_en": "snow battlefield: open ground",
+  "boxes": [
+   [
+    0.25,
+    0.8,
+    0.72,
+    0.17
+   ],
+   [
+    0.03,
+    0.6,
+    0.94,
+    0.17
+   ]
+  ]
+ },
+ {
+  "name": "snow_battlefield_1780_c",
+  "rpcs3": null,
+  "port": "../saud_play_rec/20261126-2111/play_0016_client.png",
+  "port_label": "1780_shadowfix, Saud play 21:12",
+  "title_ar": "ساحة المعركة الثلجية: أرض وأشجار",
+  "title_en": "snow battlefield: ground and trees",
+  "boxes": [
+   [
+    0.25,
+    0.8,
+    0.72,
+    0.17
+   ],
+   [
+    0.03,
+    0.6,
+    0.94,
+    0.17
+   ]
+  ]
+ }
+]

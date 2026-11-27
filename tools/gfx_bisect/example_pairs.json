@@ -1,0 +1,10 @@
+{
+  "pairs": [
+    {
+      "name": "village_start",
+      "ours": "<TEST_COPY>\\sfauto\\shots\\in_stage.png",
+      "ref": "<TEST_COPY>\\sfauto\\ref_rpcs3\\ref_instage_start_130501.png",
+      "photo": "no"
+    }
+  ]
+}

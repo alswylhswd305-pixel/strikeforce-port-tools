@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Draw Arabic labels correctly on PIL images.
 
 Primary path: Pillow + RAQM (HarfBuzz / FriBidi) with the logical string
@@ -12,6 +14,7 @@ Font: bundled Noto Naskh Arabic (SIL OFL 1.1) in fonts/.
 """
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional, Tuple
@@ -20,16 +23,21 @@ from PIL import Image, ImageDraw, ImageFont, features
 
 HERE = Path(__file__).resolve().parent
 
-# Fallback search if the bundled font was deleted.
+# Optional bundled font, then common system locations. Tests skip if none exist.
 _FONT_CANDIDATES = [
     HERE / "fonts" / "NotoNaskhArabic-Regular.ttf",
     HERE / "fonts" / "NotoNaskhArabic-Bold.ttf",
+    HERE / "fonts" / "NotoNaskhArabic-VariableFont_wght.ttf",
+    Path("/usr/share/fonts/truetype/noto/NotoNaskhArabic-Regular.ttf"),
+    Path("/usr/share/fonts/truetype/noto/NotoNaskhArabic-VariableFont_wght.ttf"),
+    Path("/usr/share/fonts/opentype/noto/NotoNaskhArabic-Regular.ttf"),
+    Path("/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf"),
+    Path("/usr/share/fonts/truetype/noto/NotoSansArabic-VariableFont_wdth,wght.ttf"),
     Path("/usr/share/fonts/truetype/sand-box/google/Noto Naskh Arabic/NotoNaskhArabic-VariableFont_wght.ttf"),
     Path("/usr/share/fonts/truetype/sand-box/google/Noto Sans Arabic/NotoSansArabic-VariableFont_wdth,wght.ttf"),
     Path(r"C:\Windows\Fonts\NotoNaskhArabic-Regular.ttf"),
     Path(r"C:\Windows\Fonts\trado.ttf"),  # Traditional Arabic on many Windows locales
 ]
-
 
 def has_raqm() -> bool:
     try:
@@ -38,13 +46,51 @@ def has_raqm() -> bool:
         return False
 
 
+def _fontconfig_arabic() -> Optional[str]:
+    import shutil
+    import subprocess
+    fc = shutil.which("fc-list")
+    if not fc:
+        return None
+    try:
+        r = subprocess.run([fc, ":lang=ar", "file"], capture_output=True, text=True, timeout=5)
+    except Exception:
+        return None
+    preferred, any_ar = None, None
+    for line in r.stdout.splitlines():
+        path = line.split(":")[0].strip()
+        if not path.lower().endswith((".ttf", ".otf", ".ttc")):
+            continue
+        if not Path(path).is_file():
+            continue
+        low = path.lower()
+        if any_ar is None:
+            any_ar = path
+        if "naskh" in low or "notosansarabic" in low or "noto sans arabic" in low:
+            preferred = path
+            break
+    return preferred or any_ar
+
+
 def find_arabic_font() -> str:
+    env = os.environ.get("SF_ARABIC_FONT") or os.environ.get("SF_AT_FONT")
+    if env and Path(env).is_file():
+        return env
     for p in _FONT_CANDIDATES:
         if p.is_file():
             return str(p)
+    for root in (Path("/usr/share/fonts"), Path("/usr/local/share/fonts")):
+        if not root.is_dir():
+            continue
+        for p in root.rglob("*"):
+            if p.suffix.lower() in {".ttf", ".otf", ".ttc"} and "arabic" in p.name.lower():
+                return str(p)
+    found = _fontconfig_arabic()
+    if found:
+        return found
     raise FileNotFoundError(
-        "No Arabic font found. Keep fonts/NotoNaskhArabic-Regular.ttf next to "
-        "this script, or install Noto Naskh Arabic."
+        "No Arabic font found. Place NotoNaskhArabic-Regular.ttf in tools/gfx_bisect/fonts/, "
+        "install Noto Naskh Arabic, or set SF_ARABIC_FONT. Tests skip when the font is absent."
     )
 
 

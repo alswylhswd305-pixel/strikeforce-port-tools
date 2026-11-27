@@ -77,3 +77,19 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Generated self-test outputs (rewritten locally; may contain machine paths)
+autotester/selftest/coverage_out*
+autotester/selftest/blank.png
+autotester/selftest/blank_annotated.png
+autotester/selftest/blank_annotations.json
+autotester/selftest/prev.json
+autotester/selftest/TEST_DONE.txt
+tools/gfx_bisect/test_out/
+
+# Synthetic self-test fixtures (not game logs). Root *.log would ignore them.
+!autotester/selftest/sample_stderr.log
+!tools/auto_nid_wire_testdata/synthetic.log
+
+# Generated stubs48 output
+stubs48-out/

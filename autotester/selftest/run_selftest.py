@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Box-side self-tests. No game, no PC launch."""
 from __future__ import annotations
 import json, os, subprocess, sys, tempfile, shutil
@@ -59,6 +61,19 @@ def test_coverage():
     check("new nid detected", d3["new_since_last_run"]["nids"] == ["0x847D2380"], d3["new_since_last_run"])
 
 def test_annotate():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("sf_annotate", ROOT / "lib" / "annotate.py")
+    ann = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(ann)
+        ann.find_font()
+    except FileNotFoundError as e:
+        print(f"  SKIP annotate (no font): {e}")
+        return
+    except Exception as e:
+        # Missing arabic_reshaper / python-bidi etc.
+        print(f"  SKIP annotate (dependency missing): {e}")
+        return
     from PIL import Image
     src = ROOT / "selftest" / "blank.png"
     Image.new("RGB", (1280, 720), (30, 60, 90)).save(src)
@@ -66,10 +81,6 @@ def test_annotate():
     js = ROOT / "selftest" / "blank_annotations.json"
     if js.exists(): js.unlink()
     py = sys.executable
-    for cand in ("/workspace/arvenv/bin/python", "/workspace/annot-venv/bin/python"):
-        if Path(cand).is_file():
-            py = cand
-            break
     r = subprocess.run([py, str(ROOT/"lib/annotate.py"),
                         "--src", str(src), "--dst", str(dst), "--json", str(js),
                         "--box", "100,80,500,400",
@@ -87,7 +98,7 @@ def test_annotate():
 
 def test_padseq_parse():
     # Import the shared python selftest logic inline
-    sys.path.insert(0, str(ROOT / ".." / "sf-shared" / "replay") if False else str(ROOT))
+    sys.path.insert(0, str(ROOT))
     from collections import namedtuple
     # local parse
     def parse(path):
@@ -112,7 +123,7 @@ def main():
     test_annotate()
     test_padseq_parse()
     # shared replay parser / guard tests
-    replay = ROOT.parent / "sf-shared" / "replay" / "selftest_padseq.py"
+    replay = ROOT.parent / "tools" / "replay" / "selftest_padseq.py"
     r = subprocess.run([sys.executable, str(replay)], capture_output=True, text=True)
     print(r.stdout)
     check("replay selftest_padseq.py", r.returncode == 0, r.stderr)

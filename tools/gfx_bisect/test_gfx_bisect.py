@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Unit tests for gfx_bisect / img_compare. No game launch, no Windows needed."""
 from __future__ import annotations
 
@@ -18,7 +20,7 @@ import img_compare as ic
 from PIL import Image
 
 
-SHOTS = Path("/workspace/sf-shots")
+SHOTS = Path(os.environ["SF_SHOTS"]) if os.environ.get("SF_SHOTS") else HERE / "optional_shots"
 TEST_OUT = HERE / "test_out"
 
 
@@ -144,7 +146,8 @@ class TestImgCompare(unittest.TestCase):
         ours = SHOTS / "p88_restart_150s.jpg"
         ref = SHOTS / "rpcs3" / "ref_instage_start_130501.png"
         stack = SHOTS / "cmp_ref_vs_p88.jpg"
-        self.assertTrue(ours.is_file() and ref.is_file())
+        if not (ours.is_file() and ref.is_file()):
+            self.skipTest("optional reference shots not provided (set SF_SHOTS)")
         out = TEST_OUT / "p88_vs_ref"
         report = ic.compare(str(ours), str(ref), str(out), size=(1280, 720))
         Path(out / "summary.json").write_text(json.dumps({

@@ -1,8 +1,0 @@
-coverage from /workspace/sf-autotester/selftest/sample_stderr.log
-HLE hook lines=4 unique NIDs=2 nid+lr pairs=2
-NID	NAME	CALLS	LR_COUNT
-0x7E4A4A49	cellAdecQueryAttr	5	1
-0x847D2380	cellAdecClose	3	1
-movie log lines: 10  PAD_FILE presses: 1  stubs: 0
-new NIDs since last run: 0
-new guest functions since last run: 0

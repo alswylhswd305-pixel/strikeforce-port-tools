@@ -1,0 +1,16 @@
+[sf-movie] cellSail/cellPamf movie player registered (12 functions)
+[sf-movie] CreateDescriptor /dev_bdvd/PS3_GAME/USRDIR/movie000.pam -> ok
+[sf-movie] PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)
+[sf-movie] frame 1: mean RGB-luma 228.0, mid-row Y 200.0 (decoder 1280x720 stride 1280 hpad 0 len 100)
+[sf-movie] PlayerStop at clock 8.00
+[sf-movie] PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)
+[sf-movie] PlayerStop at clock 6.00
+[sf-movie] PlayerStart cmd start=1 seek=0 terminus=0 flags=0x0 seekArg=0x0 terminusArg=0x0 -> file 0x0..0x1 (data 0x0)
+[sf-movie] PlayerStop at clock 40.00
+[sf-movie] PlayerFinalize self=0x1234
+[hle-lr] new nid=0x7E4A4A49 lr=0x00ABCDEF tid=1 r3=0x1 r4=0x2 r5=0x3 r6=0x4 ret=0x0 t=100
+[hle-lr] new nid=0x847D2380 lr=0x00AB0000 tid=1 r3=0x1 r4=0x2 r5=0x3 r6=0x4 ret=0x0 t=120
+[hle-lrc] dump=1 t=20000 pairs=2
+[hle-lrc] 1 0x7E4A4A49 0x00ABCDEF 5 ret=0x0 tid=1
+[hle-lrc] 1 0x847D2380 0x00AB0000 3 ret=0x0 tid=1
+[cellPad] PAD_FILE press 0x0008

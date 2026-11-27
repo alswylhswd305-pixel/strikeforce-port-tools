@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Self-tests for diagnose.py / arabic_draw.py. No game, no Windows needed."""
 from __future__ import annotations
 
@@ -20,6 +22,18 @@ import diagnose as dg
 import gfx_bisect as gb
 
 
+def _require_arabic_font():
+    try:
+        return ad.find_arabic_font()
+    except FileNotFoundError as e:
+        raise unittest.SkipTest(f"Arabic font not found: {e}")
+
+
+def _require_cv2():
+    if getattr(dg, "cv2", None) is None:
+        raise unittest.SkipTest("opencv-python-headless is not installed")
+
+
 def _solid(w, h, rgb):
     return Image.new("RGB", (w, h), rgb)
 
@@ -31,6 +45,9 @@ def _save(im, path):
 
 
 class TestArabic(unittest.TestCase):
+    def setUp(self):
+        _require_arabic_font()
+
     def test_reshapes_and_paints(self):
         im = _solid(400, 80, (255, 255, 255))
         box = ad.draw_label(im, (10, 10), "أسطح داكنة", size=28, bg=(180, 0, 0), fill=(255, 255, 255))
@@ -44,6 +61,9 @@ class TestArabic(unittest.TestCase):
 
 
 class TestAlign(unittest.TestCase):
+    def setUp(self):
+        _require_cv2()
+
     def test_recovers_small_shift(self):
         # A textured image, shift by 12 px, ECC/ORB should pull it back.
         rng = np.random.default_rng(0)
@@ -148,6 +168,9 @@ class TestDetectors(unittest.TestCase):
 
 
 class TestCutscene(unittest.TestCase):
+    def setUp(self):
+        _require_cv2()
+
     def test_syncs_shifted_sequences(self):
         with tempfile.TemporaryDirectory() as tmp:
             ours_d = Path(tmp) / "ours"
@@ -228,6 +251,7 @@ class TestPairAndBisectHook(unittest.TestCase):
 
 class TestArabicRaqm(unittest.TestCase):
     def test_connected_arabic_not_blank(self):
+        _require_arabic_font()
         im = _solid(500, 90, (255, 255, 255))
         box = ad.draw_label(im, (12, 16), "حبوب الظل", size=36,
                             bg=(255, 255, 255), fill=(0, 0, 0))
@@ -279,6 +303,9 @@ class TestFaceAlignmentGuard(unittest.TestCase):
 
 
 class TestPhotoCrop(unittest.TestCase):
+    def setUp(self):
+        _require_cv2()
+
     def test_exif_transpose_and_bright_rect(self):
         # A portrait "room" photo: dark walls, a bright 16:9 "screen" in the middle.
         # Saved with EXIF orientation 6 so the raw pixels are rotated.
@@ -317,9 +344,9 @@ class TestPhotoCrop(unittest.TestCase):
         self.assertGreater(arr[500:].mean(), 150)
 
     def test_real_tv_photo_if_present(self):
-        path = Path("/workspace/sf-shared/saud_tv_photo_1511.jpg")
+        path = Path(os.environ["SF_TV_PHOTO"]) if os.environ.get("SF_TV_PHOTO") else Path()
         if not path.is_file():
-            self.skipTest("tv photo not on this box")
+            self.skipTest("optional photo not provided (set SF_TV_PHOTO to test this path)")
         im = dg.load_image(str(path))
         # EXIF 6 → portrait
         self.assertGreater(im.size[1], im.size[0])

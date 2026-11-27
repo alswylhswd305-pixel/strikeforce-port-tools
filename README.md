@@ -1,5 +1,7 @@
 # strikeforce-port-tools
 
+[![Tests](https://github.com/alswylhswd305-pixel/strikeforce-port-tools/actions/workflows/tests.yml/badge.svg)](https://github.com/alswylhswd305-pixel/strikeforce-port-tools/actions/workflows/tests.yml)
+
 **Author: Saud Alsuwailih (سعود الصويلح)**
 
 Public collection of **tools, patches, and method docs** written while porting *Dynasty Warriors: Strikeforce* (PS3, BLUS30471) to a native Windows build with [ps3recomp](https://github.com/sp00nznet/ps3recomp).
@@ -11,6 +13,8 @@ The same tools and method are meant to be reused on **another PS3 game you legal
 ## Arabic summary / ملخص عربي
 
 هذا المستودع عام: فيه الأدوات والتصليحات والشرح اللي كتبناها وإحنا نحوّل اللعبة من PS3 إلى الحاسوب، **بدون أي ملف من اللعبة**. اللاعب لازم تكون عنده نسخته الأصلية القانونية، يحط ملف اللعبة (EBOOT) بنفسه، والأداة تحوّله على جهازه. الدليل الكامل من الألف إلى الياء: `docs/GUIDE_A_TO_Z_ar.md`.
+
+شارة الاختبارات فوق: نفس مجموعة الاختبارات تشتغل على GitHub Actions، وتتخطى اختبارات الخط/الصور إذا الملف ناقص.
 
 الرخصة: AGPL-3.0. أي أحد يقدر يستخدمه ويعدّله، بس إذا نشر نسخته أو شغّلها على النت لازم ينشر كوده بنفس الرخصة. الملفات اللي تعدّل على ps3recomp تبقى على رخصته MIT.
 
@@ -57,3 +61,14 @@ You supply, and never commit: your own dump, your decrypted `EBOOT.elf`, and off
 ## License
 
 **AGPL-3.0** for the author's own work (see `LICENSE` and `NOTICE`). Patches and files that modify ps3recomp keep ps3recomp's MIT license. Upstream ps3recomp and any third-party tools you clone yourself have their own terms; MIT comparison helpers from other ports are **not** copied here (see `tools/testloop/third_party/SOURCES.md`). The license grants no rights to the game, its data, PS3 firmware, or any Sony / KOEI TECMO material.
+
+## Self-tests (no game required)
+
+Run the whole suite (this is also what GitHub Actions runs):
+
+```bash
+pip install -r requirements-test.txt
+python3 scripts/run_selftests.py
+```
+
+Arabic-font and optional comparison-image tests **skip cleanly** if those files are not on the machine. `auto_nid_wire` ships a tiny made-up `tools/auto_nid_wire_testdata/synthetic.log` (not a game log). `stubs48` takes input paths as CLI flags or env vars (`--report-csv` / `SF_NID_REPORT_CSV`, and the same pattern for the other files), with repo-relative defaults.

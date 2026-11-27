@@ -1,27 +1,103 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Build stubs48.md / stubs48.json from box-local sources only. Read-only on inputs."""
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
 import os
 import re
+import sys
 import datetime
 from collections import defaultdict
 from pathlib import Path
 
 KUWAIT = datetime.timezone(datetime.timedelta(hours=3), name="Asia/Kuwait")
-OUT = Path("/workspace/sf-stubs48")
-REPORT_CSV = Path("/workspace/sf-shared/nid-autolink/pc-results/report.csv")
-AUTOLINK_LINE = Path("/workspace/sf-shared/nid-autolink/pc-results/autolink_line.txt")
-CALLGRAPH = Path("/workspace/sf-shared/nid-autolink/pc-results/v2/callgraph.json")
-IMPORTS = Path("/workspace/sf-shared/progress-src/out/EBOOT.imports.json")
-FUNCTIONS = Path("/workspace/sf-shared/progress-src/out/EBOOT.functions.json")
-RANKED = Path("/workspace/sf-shared/nid-autolink/v2-rank/master_ranked.csv")
-SPEC_ROOT = Path("/workspace/sf-shared/nid-autolink/docs/hle_spec")
-FINDINGS_DIR = Path("/workspace/sf-shared/progress-src/runs")
-LOG_SEARCH = Path("/workspace/sf-shared/nid-autolink/pc-results/v2/log_search.txt")
+
+
+def repo_root() -> Path:
+    """tools/stubs48/build_stubs48.py -> repository root."""
+    return Path(__file__).resolve().parents[2]
+
+
+def default_paths() -> dict:
+    """Repo-relative defaults. Optional inputs may be absent on a fresh clone."""
+    root = repo_root()
+    nid = root / "tools" / "nid-autolink"
+    progress = root / "tools" / "progress-src"
+    return {
+        "out": root / "stubs48-out",
+        "report_csv": nid / "pc-results" / "report.csv",
+        "autolink_line": nid / "pc-results" / "autolink_line.txt",
+        "callgraph": nid / "pc-results" / "v2" / "callgraph.json",
+        "imports": progress / "out" / "EBOOT.imports.json",
+        "functions": progress / "out" / "EBOOT.functions.json",
+        "ranked": nid / "v2-rank" / "master_ranked.csv",
+        "spec_root": nid / "docs" / "hle_spec",
+        "findings_dir": progress / "runs",
+        "log_search": nid / "pc-results" / "v2" / "log_search.txt",
+        "log_roots": [
+            root / "tools" / "testloop",
+            root / "tools" / "voicefreeze",
+            root / "autotester",
+        ],
+    }
+
+
+def _pick_path(cli: str | None, env: str, default: Path) -> Path:
+    if cli:
+        return Path(cli).expanduser()
+    val = os.environ.get(env)
+    if val:
+        return Path(val).expanduser()
+    return default
+
+
+OUT = Path()
+REPORT_CSV = Path()
+AUTOLINK_LINE = Path()
+CALLGRAPH = Path()
+IMPORTS = Path()
+FUNCTIONS = Path()
+RANKED = Path()
+SPEC_ROOT = Path()
+FINDINGS_DIR = Path()
+LOG_SEARCH = Path()
+LOG_ROOTS: list[Path] = []
+
+
+def apply_paths(args=None) -> None:
+    """Fill path globals from CLI, then env, then repo-relative defaults."""
+    global OUT, REPORT_CSV, AUTOLINK_LINE, CALLGRAPH, IMPORTS
+    global FUNCTIONS, RANKED, SPEC_ROOT, FINDINGS_DIR, LOG_SEARCH, LOG_ROOTS
+    d = default_paths()
+    ns = args
+    OUT = _pick_path(getattr(ns, "out", None), "SF_STUBS48_OUT", d["out"])
+    REPORT_CSV = _pick_path(getattr(ns, "report_csv", None), "SF_NID_REPORT_CSV", d["report_csv"])
+    AUTOLINK_LINE = _pick_path(getattr(ns, "autolink_line", None), "SF_AUTOLINK_LINE", d["autolink_line"])
+    CALLGRAPH = _pick_path(getattr(ns, "callgraph", None), "SF_CALLGRAPH", d["callgraph"])
+    IMPORTS = _pick_path(getattr(ns, "imports", None), "SF_IMPORTS_JSON", d["imports"])
+    FUNCTIONS = _pick_path(getattr(ns, "functions", None), "SF_FUNCTIONS_JSON", d["functions"])
+    RANKED = _pick_path(getattr(ns, "ranked", None), "SF_RANKED_CSV", d["ranked"])
+    SPEC_ROOT = _pick_path(getattr(ns, "spec_root", None), "SF_SPEC_ROOT", d["spec_root"])
+    FINDINGS_DIR = _pick_path(getattr(ns, "findings_dir", None), "SF_FINDINGS_DIR", d["findings_dir"])
+    LOG_SEARCH = _pick_path(getattr(ns, "log_search", None), "SF_LOG_SEARCH", d["log_search"])
+    roots: list[Path] = []
+    cli_roots = list(getattr(ns, "log_root", None) or [])
+    if cli_roots:
+        roots.extend(Path(x).expanduser() for x in cli_roots)
+    env_roots = os.environ.get("SF_STUBS48_LOG_ROOTS", "")
+    if env_roots and not cli_roots:
+        roots.extend(Path(x).expanduser() for x in env_roots.split(os.pathsep) if x)
+    if not roots:
+        roots = list(d["log_roots"])
+    LOG_ROOTS = roots
+
+
+apply_paths()
 
 HLE_NEW = re.compile(
     r"\[hle-lr\]\s+new\s+nid=(0x[0-9A-Fa-f]+)\s+lr=(0x[0-9A-Fa-f]+)(?:.*?tid=(\d+))?(?:.*?ret=(0x[0-9A-Fa-f]+))?",
@@ -307,10 +383,14 @@ def load_stubs():
 
 
 def load_callgraph():
+    if not CALLGRAPH.is_file():
+        return {}
     return json.loads(CALLGRAPH.read_text(encoding="utf-8"))
 
 
 def load_functions_index():
+    if not FUNCTIONS.is_file():
+        return []
     data = json.loads(FUNCTIONS.read_text(encoding="utf-8"))
     ranges = []
     for item in data:
@@ -363,16 +443,7 @@ def stage_for(log_name: str, line_no: int):
 def iter_log_files():
     """Unique-by-md5 candidate logs on the box."""
     candidates = []
-    roots = [
-        Path("/workspace/sf-shared/testloop"),
-        Path("/workspace/sf-gfx-runs"),
-        Path("/workspace/sf-shared/voicefreeze"),
-        Path("/workspace/sf-autotester"),
-        Path("/workspace/sf-diag1786"),
-        Path("/workspace/faces"),
-        Path("/workspace/clothv2"),
-        Path("/workspace/sf-shared/progress-src/runs"),
-    ]
+    roots = list(LOG_ROOTS) or default_paths()["log_roots"]
     skip_dir = {"node_modules", ".git", "__pycache__"}
     want_suffix = {".log", ".txt", ".json"}
     for root in roots:
@@ -879,7 +950,7 @@ def propose_plan(records, scanned, hle_hook_logs):
         "detail": (
             "On a [TEST-SALEM] window only, state under sfauto (not Saud's play save): "
             "SF_HLE_LRLOG=1. Keep stderr+stdout. After quit, run lib/coverage.py on the log and copy only "
-            "numbers (unique NIDs, per-NID counts, LRs, first stage/movie) back to /workspace/sf-stubs48/pc-results/. "
+            "numbers (unique NIDs, per-NID counts, LRs, first stage/movie) back to stubs48-out/pc-results/. "
             "Do not copy EBOOT or lifted code."
         ),
     })
@@ -941,7 +1012,7 @@ def propose_plan(records, scanned, hle_hook_logs):
         "do_not_run_on_pc_now": True,
         "wait_for": "gate / SFRACE window to finish; Saud not playing; parent agent launches the PC run later",
         "hook": "SF_HLE_LRLOG=1 (already in 1786_voicediag / hooks/BUILD_NOTES.md). Movie v5 as of 27-Nov 18:09 does not contain this hook.",
-        "tp_tool": "/workspace/sf-autotester/lib/tp_tool.ps1  (guest XYZ 0x008D3800, [TEST-SALEM] only)",
+        "tp_tool": "autotester/lib/tp_tool.ps1  (guest XYZ 0x008D3800, [TEST-SALEM] only)",
         "checkpoint_caveat": "data/checkpoints.json has only village_x6499_partial (X confirmed, Y/Z missing). Do not goto it.",
         "steps": steps,
         "unseen_by_module": {m: [r["name"] for r in rs] for m, rs in by_mod.items()},
@@ -950,6 +1021,7 @@ def propose_plan(records, scanned, hle_hook_logs):
 
 
 def write_json(payload):
+    OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / "stubs48.json"
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
@@ -994,7 +1066,7 @@ def evid_short(rec):
     first = rec.get("first_hit") or {}
     if first.get("line"):
         p = first["log"]
-        short = p.replace("/workspace/", "")
+        short = p.replace("\\", "/").split("/")[-1] if p else p
         return f"{short}:{first['line']} ({first.get('kind')})"
     if first.get("kind"):
         return f"{first.get('kind')}"
@@ -1143,7 +1215,70 @@ def write_md(payload):
     return path
 
 
-def main():
+def build_arg_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser(
+        description="Classify the 48 stub NIDs from a nid-autolink report and optional logs. "
+        "All input paths can be set by a flag, an env var, or a repo-relative default."
+    )
+    ap.add_argument("--out", help="output directory (env SF_STUBS48_OUT)")
+    ap.add_argument("--report-csv", dest="report_csv", help="nid-autolink report.csv (env SF_NID_REPORT_CSV)")
+    ap.add_argument("--autolink-line", dest="autolink_line", help="autolink_line.txt (env SF_AUTOLINK_LINE)")
+    ap.add_argument("--callgraph", help="callgraph.json (env SF_CALLGRAPH)")
+    ap.add_argument("--imports", help="EBOOT.imports.json (env SF_IMPORTS_JSON)")
+    ap.add_argument("--functions", help="EBOOT.functions.json (env SF_FUNCTIONS_JSON)")
+    ap.add_argument("--ranked", help="master_ranked.csv (env SF_RANKED_CSV)")
+    ap.add_argument("--spec-root", dest="spec_root", help="hle_spec directory (env SF_SPEC_ROOT)")
+    ap.add_argument("--findings-dir", dest="findings_dir", help="findings directory (env SF_FINDINGS_DIR)")
+    ap.add_argument("--log-search", dest="log_search", help="log_search.txt (env SF_LOG_SEARCH)")
+    ap.add_argument(
+        "--log-root",
+        action="append",
+        default=[],
+        help="directory to scan for logs (repeatable; env SF_STUBS48_LOG_ROOTS, path-separated)",
+    )
+    ap.add_argument("--selftest", action="store_true", help="check path defaults; do not need game logs")
+    return ap
+
+
+def missing_report_message(path: Path) -> str:
+    return (
+        f"stubs48: report.csv not found at {path}\n"
+        "Set --report-csv or SF_NID_REPORT_CSV to your nid-autolink report. "
+        "A fresh clone does not ship game-derived reports."
+    )
+
+
+def selftest() -> int:
+    apply_paths(None)
+    root = repo_root()
+    d = default_paths()
+    for key, val in d.items():
+        paths = val if key == "log_roots" else [val]
+        for p in paths:
+            s = str(p)
+            if "/workspace/sf-shared" in s or s.startswith("/workspace/sf-stubs48"):
+                raise AssertionError(f"default {key} must not hardcode a box path: {p}")
+            if not s.startswith(str(root)):
+                raise AssertionError(f"default {key} is not repo-relative: {p}")
+    # Clean error when the report is absent (fresh clone).
+    missing = root / "this-file-does-not-exist-stubs48.csv"
+    msg = missing_report_message(missing)
+    if "--report-csv" not in msg or "SF_NID_REPORT_CSV" not in msg:
+        raise AssertionError("missing-report message should name the flag and env var")
+    print("stubs48 selftest: repo-relative defaults and clean missing-input message ok")
+    if not REPORT_CSV.is_file():
+        print("stubs48 selftest: skip full rebuild (no report.csv; set --report-csv to generate)")
+    return 0
+
+
+def main(argv=None):
+    args = build_arg_parser().parse_args(argv)
+    apply_paths(args)
+    if args.selftest:
+        return selftest()
+    if not REPORT_CSV.is_file():
+        print(missing_report_message(REPORT_CSV), file=sys.stderr)
+        return 2
     stubs = load_stubs()
     cg = load_callgraph()
     fn_ranges = load_functions_index()
@@ -1207,4 +1342,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

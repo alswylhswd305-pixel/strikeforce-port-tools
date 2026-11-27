@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """Burn Arabic red-box labels onto a screenshot and write annotations JSON.
 
 Uses arabic_reshaper + python-bidi (required). Default font is Noto Sans Arabic.
@@ -13,11 +15,37 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 from PIL import Image, ImageDraw, ImageFont
 
-FONT = os.environ.get(
-    "SF_AT_FONT",
+from pathlib import Path
+
+_FONT_CANDIDATES = [
+    os.environ.get("SF_AT_FONT") or "",
+    os.environ.get("SF_ARABIC_FONT") or "",
+    "/usr/share/fonts/truetype/noto/NotoNaskhArabic-Regular.ttf",
+    "/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf",
+    "/usr/share/fonts/truetype/noto/NotoSansArabic-VariableFont_wdth,wght.ttf",
     "/usr/share/fonts/truetype/sand-box/google/Noto Sans Arabic/NotoSansArabic-VariableFont_wdth,wght.ttf",
-)
-FALLBACK = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    "/usr/share/fonts/truetype/sand-box/google/Noto Naskh Arabic/NotoNaskhArabic-VariableFont_wght.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    r"C:\Windows\Fonts\NotoNaskhArabic-Regular.ttf",
+    r"C:\Windows\Fonts\trado.ttf",
+]
+
+
+def find_font() -> str:
+    for raw in _FONT_CANDIDATES:
+        if raw and os.path.isfile(raw):
+            return raw
+    fonts_root = Path("/usr/share/fonts")
+    if fonts_root.is_dir():
+        for p in fonts_root.rglob("*"):
+            if p.suffix.lower() in {".ttf", ".otf", ".ttc"} and "arabic" in p.name.lower():
+                return str(p)
+        dejavu = fonts_root / "truetype/dejavu/DejaVuSans-Bold.ttf"
+        if dejavu.is_file():
+            return str(dejavu)
+    raise FileNotFoundError(
+        "No label font found. Install Noto Naskh Arabic or DejaVu, or set SF_AT_FONT / SF_ARABIC_FONT."
+    )
 
 
 def shape_ar(s: str) -> str:
@@ -25,8 +53,7 @@ def shape_ar(s: str) -> str:
 
 
 def font(size: int):
-    path = FONT if os.path.isfile(FONT) else FALLBACK
-    return ImageFont.truetype(path, size=size)
+    return ImageFont.truetype(find_font(), size=size)
 
 
 def draw_label(draw: ImageDraw.ImageDraw, cx: int, y: int, text: str, fill, fnt):

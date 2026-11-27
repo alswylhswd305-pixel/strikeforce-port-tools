@@ -1,0 +1,6 @@
+# Packages needed to run the in-repo self-tests (no game, no display).
+pillow
+numpy
+opencv-python-headless
+arabic-reshaper
+python-bidi

@@ -59,3 +59,7 @@ A November 2026 draft tree briefly carried an AGPL-3.0 text; **that license is n
 ## Requirements (for someone converting their own game)
 
 You supply, and never commit: your own dump, your decrypted `EBOOT.elf`, and official firmware in your own RPCS3 `dev_flash`. See the A-to-Z guide for the toolchain list (VS 2022 Build Tools, clang-cl, CMake, Ninja, Python, Git).
+
+## License
+
+AGPL-3.0 (see `LICENSE` and `NOTICE`). Files that modify ps3recomp keep its MIT license.

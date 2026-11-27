@@ -1,0 +1,8 @@
+strikeforce-port-tools
+Copyright (C) 2026 Saud Hamad Alsuwailih (alswylhswd305-pixel)
+
+Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0); see LICENSE.
+
+Exception: patches and files that modify or derive from ps3recomp keep
+ps3recomp's own MIT license. AGPL-3.0 covers only the original work in this
+repository. No game data, firmware, or lifted game code is included.

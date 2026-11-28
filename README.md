@@ -16,7 +16,7 @@ The same tools and method are meant to be reused on **another PS3 game you legal
 
 شارة الاختبارات فوق: نفس مجموعة الاختبارات تشتغل على GitHub Actions، وتتخطى اختبارات الخط/الصور إذا الملف ناقص.
 
-الرخصة: AGPL-3.0. أي أحد يقدر يستخدمه ويعدّله، بس إذا نشر نسخته أو شغّلها على النت لازم ينشر كوده بنفس الرخصة. الملفات اللي تعدّل على ps3recomp تبقى على رخصته MIT.
+الرخصة مزدوجة: الناس يستخدمون الشغل مجاناً برخصة AGPL-3.0 أو أحدث (إذا نشروا نسخة أو شغّلوها على النت لازم ينشرون الكود بنفس الرخصة). الشركات اللي تبي نسخة بدون شروط AGPL تطلب رخصة تجارية مدفوعة من سعود: https://github.com/alswylhswd305-pixel — التفاصيل في `COMMERCIAL-LICENSE.md` و`شرح_الرخصة.md`. الملفات اللي تعدّل على ps3recomp تبقى على رخصته MIT.
 
 ## What is not in this repository
 
@@ -48,7 +48,9 @@ An earlier writeup covered the first title-screen boot only; that text is kept i
 | `tools/rsx_census/` | RSX method census hook + report |
 | `tools/gfx_bisect/` | Align and compare port vs RPCS3 screenshots (you supply the shots) |
 | `tools/testloop/` | One-click test loop (Arabic menu) |
-| `tools/sfauto/` and `tools/pc-helpers/` | Run helpers: capture, hang report, window place, pack, step, … |
+| `tools/sfauto/` | Workflow tools: RenderDoc pass/export helpers, image diff, coverage, handler audit, voice probe (you supply captures; none are in the repo) |
+| `tools/coverage_tools/` | RSX and syscall coverage reports, plus Arabic shaping helpers |
+| `tools/pc-helpers/` | Run helpers: hang report, window place, pack, step, … |
 | `tools/movie/` | Movie/PAMF helpers and the latest movie `.inc` |
 | `tools/stubs48/` | Census of still-stub HLE imports |
 | `tools/progress/` | Progress counters (counts + sources, not a single %) |
@@ -60,7 +62,14 @@ You supply, and never commit: your own dump, your decrypted `EBOOT.elf`, and off
 
 ## License
 
-**AGPL-3.0** for the author's own work (see `LICENSE` and `NOTICE`). Patches and files that modify ps3recomp keep ps3recomp's MIT license. Upstream ps3recomp and any third-party tools you clone yourself have their own terms; MIT comparison helpers from other ports are **not** copied here (see `tools/testloop/third_party/SOURCES.md`). The license grants no rights to the game, its data, PS3 firmware, or any Sony / KOEI TECMO material.
+The author's own work is **dual-licensed**:
+
+- **AGPL-3.0-or-later** for free use by people (see `LICENSE` and `NOTICE.md`). If you distribute a modified version or run it as a network service, you must share the corresponding source under AGPL.
+- A **paid commercial licence** for companies (and others) that want to use the work without AGPL obligations. See `COMMERCIAL-LICENSE.md`. That file is a notice only, not the contract. Contact: https://github.com/alswylhswd305-pixel
+
+Arabic explainer: [`شرح_الرخصة.md`](شرح_الرخصة.md) · Arabic overview: [`README_AR.md`](README_AR.md). Contributors agree to [`CONTRIBUTING-CLA.md`](CONTRIBUTING-CLA.md) so the work can stay dual-licensed.
+
+Patches and files that modify ps3recomp keep ps3recomp's MIT license. Upstream ps3recomp and any third-party tools you clone yourself have their own terms; MIT comparison helpers from other ports are **not** copied here (see `tools/testloop/third_party/SOURCES.md`). These licences grant no rights to the game, its data, PS3 firmware, or any Sony / KOEI TECMO material.
 
 ## Self-tests (no game required)
 

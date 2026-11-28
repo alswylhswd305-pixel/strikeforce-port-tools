@@ -93,3 +93,7 @@ tools/gfx_bisect/test_out/
 
 # Generated stubs48 output
 stubs48-out/
+
+# Generated outputs from the workflow / coverage tools
+tools/sfauto/out/
+tools/coverage_tools/out/

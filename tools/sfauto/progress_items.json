@@ -1,0 +1,77 @@
+{
+  "_note": "Hand-maintained issue list. progress.py renders it into PROGRESS.md. status: open | investigating | proposed | done | unknown. Every item needs evidence (file or log) and the date it was last verified. No percentages here.",
+  "items": [
+    {
+      "id": "shadows-static",
+      "title": "Static world meshes (well, buildings) cast no shadow",
+      "status": "investigating",
+      "evidence": "Shadow depth map of captures frame9676/frame12230 holds only character silhouettes (697 / 1524 depth-only draws, 6 pipelines). Port drops almost no draws (upload_empty ~0.4%). Unit 0 of the shadow-caster FPs is a normal DXT5 diffuse (correct). RPCS3 band under the well has a different direction from the player shadow, so it may be a separate decal.",
+      "verified": "2026-11-28",
+      "next": "RPCS3 RenderDoc capture of the same village frame: does its shadow pass contain the well?"
+    },
+    {
+      "id": "poly-offset",
+      "title": "NV4097_SET_POLY_OFFSET_FILL_ENABLE not handled (depth bias for the shadow pass)",
+      "status": "open",
+      "evidence": "rsx_coverage: game writes it once, no handler; raster state in capture shows depthBias=0. Effect on shadows: UNKNOWN, untested.",
+      "verified": "2026-11-28",
+      "next": "Cheap test: log the poly offset factor/units the game sets before the shadow pass."
+    },
+    {
+      "id": "voice",
+      "title": "Character voices: Voice.bin never opened",
+      "status": "investigating",
+      "evidence": "Hand-played runs (sys1804 04:22 \"saud_0438\", b1805 12:28) open Voice.bin right after spawn, then the main thread signals the IMS driver (cond 0x11E54CC0 by tid 1 at 0x208D0) which signals the At3 decoder (0x11E54F50 by tid 20): threads 18/19/20 ARE signalled there. Automated runs (walk/attack/talk probe 14:47, village runs) never open it. lr_diff.py: of 748 call sites tid 1 reaches in the working run, 729 are reached by every failing run and exactly 19 are not: all are lwmutex lock/unlock inside the Ksl IMS objects 0x11E54D18/0x11E54D60/0x11E54CC8 (func_000136E0, func_000140B4, func_0002116C, func_00013350). func_00013350 is called by func_005C69B0 <- func_005C73E4, a vtable thunk (no direct caller). Cause UNKNOWN: some game state/event decides to make that virtual call. Not an lwcond problem (same with SF_LWCOND 1 and 2). Probe presses (SQUARE/CROSS/CIRCLE/walk) in the village did not trigger it.",
+      "verified": "2026-11-28",
+      "next": "Needs a rebuild (approval): env-gated entry trace on func_005C73E4 / func_00013350 (print LR, r3..r6), then a run where Voice.bin opens vs one where it does not."
+    },
+    {
+      "id": "lwcond-real",
+      "title": "lwcond: real waits for every cond (SF_LWCOND=2 default)",
+      "status": "proposed",
+      "evidence": "Test runs (130 s and a full title->village run) clean: no stall, poll_wait=0, signal_all 1928/s -> 0/s. Patch lwcond_default2_PROPOSED.patch is NOT applied.",
+      "verified": "2026-11-28",
+      "next": "User approval to apply and rebuild."
+    },
+    {
+      "id": "stage3",
+      "title": "Stage 3 state",
+      "status": "unknown",
+      "evidence": "Not run by this workflow. Needs a fresh screenshot before any claim.",
+      "verified": "",
+      "next": "Run to stage 3 and screenshot."
+    },
+    {
+      "id": "lighting",
+      "title": "Lighting differences vs RPCS3",
+      "status": "open",
+      "evidence": "No measurement yet.",
+      "verified": "",
+      "next": "imgdiff against same-camera RPCS3 frames."
+    },
+    {
+      "id": "pacing",
+      "title": "Frame pacing",
+      "status": "open",
+      "evidence": "No measurement yet.",
+      "verified": "",
+      "next": "Log frame times over a 60 s village run."
+    },
+    {
+      "id": "non-real-fn",
+      "title": "cellSail and sceNp functions the game calls: audit",
+      "status": "done",
+      "evidence": "Backup first: sfauto/backups/1807trace_20261128-144231 (exe) and src_audit_20261128-144231 (sources). audit_handlers.py flagged 28 of the 157 imports the last run called; read each flagged handler that matters for gameplay: sceNpBasicGetCustomInvitationEntryCount validates the pointer and writes count=0 (strikeforce_sys1804.inc); cellSail Set*Adapter store the adapter pointer (strikeforce_movie.inc:730); GetFrame/GetFormat/UpdateAvSync have real logic and gating; cellSpursCreateTaskset and cellAtracCreateDecoderExt delegate to real implementations; heap functions return real pointers; cellGcmGetControlRegister returns the fixed control-register address. No defect found, no code changed. Not read in detail: cellKb* (keyboard, not needed for gameplay), _cellGcmSetFlipCommand (rendering works), _cellSpursAttributeInitialize.",
+      "verified": "2026-11-28",
+      "next": "None for cellSail/sceNp. Next real-gameplay items: Voice.bin trigger, static shadows."
+    },
+    {
+      "id": "coverage-false-positive",
+      "title": "Static coverage scan under-counts tagged handlers",
+      "status": "done",
+      "evidence": "sf_coverage.py now overrides the static classification with the runtime handler table: implemented 228 -> 269 of 346.",
+      "verified": "2026-11-28",
+      "next": "Keep stubhit_table.tsv from each run; add a check for handlers that return 0 without writing outputs."
+    }
+  ]
+}

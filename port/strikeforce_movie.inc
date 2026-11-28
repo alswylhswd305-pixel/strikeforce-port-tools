@@ -1,6 +1,10 @@
+/* Copyright (c) 2026 Saud Hamad Alsuwailih
+ * SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
+ */
+
 /* Strikeforce port: cellSail movie playback that really plays (picture + sound).
  *
- * Own implementation (MIT, like the rest of the port). No RPCS3 or GPL code.
+ * Own implementation (dual-licensed AGPL-3.0-or-later OR a commercial licence from Saud). No RPCS3 or GPL code.
  * Spec sources, all paraphrased:
  *  - the game's own use of SAIL, read from its lifted code (ppu_recomp_002.cpp,
  *    0x5C871C audio thread, 0x5C8E7C video fetch, 0x5C91E8 player setup,

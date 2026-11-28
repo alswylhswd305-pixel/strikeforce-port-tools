@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Saud Hamad Alsuwailih
+# SPDX-License-Identifier: AGPL-3.0-or-later OR LicenseRef-Saud-Commercial
 """gen_coverage.py -- static NV4097 method coverage of the legacy D3D12 path.
 
 Parses Salem's tree (rsx_commands.c/.h, the D3D12 backend, rsx_vertex_fetch.c,
@@ -262,8 +264,12 @@ class Analyzer:
             eff['actions'].add('backend.' + a.group(1))
         if 'vm_write32' in text:
             eff['actions'].add('guest_write')
-        for c in re.finditer(r'\b(g_\w+|s_\w+)\s*=\s*data\b', text):
+        for c in re.finditer(r'\b(g_\w+|s_\w+)\s*(?:\[[^\]]*\])?\s*=\s*data\b', text):
             eff['captures'].add(c.group(1))
+        # [1803] capture through a pointer to a global:  T* r = ... &g_x ...;  *r = data;
+        if re.search(r'^\s*\*\s*\w+\s*=\s*data\s*;', text, re.M):
+            for c in re.finditer(r'&(g_\w+)', text):
+                eff['captures'].add(c.group(1))
         if re.search(r'\w+_hook\s*\(', text):
             eff['actions'].add('hook_call')
         for c in re.finditer(r'\b(process_\w+|rsx_vp_\w+)\s*\(', text):
@@ -403,12 +409,18 @@ def overrides(backend: Src):
     m2 = re.search(r'vpx\[2\]\s*=\s*vs_\[2\];\s*vpx\[6\]\s*=\s*vo_\[2\]', backend.code)
     if m1 and m2:
         ev = f'{os.path.basename(backend.path)}:{line_of(backend.code, m1.start())}-{line_of(backend.code, m2.start())}'
+        # [1803] sf1803_vpx() maps the guest scale/offset x,y into the epilogue (VPXFORM_OFF=1 reverts)
+        m4 = re.search(r'static void sf1803_vpx\(', backend.code)
+        xy = bool(m4 and re.search(r'viewport_scale\[0\]', backend.code) and re.search(r'viewport_offset\[1\]', backend.code))
         for base in (0x0A20, 0x0A30):
-            for lane, cls in ((0, 'stored-but-unused'), (1, 'stored-but-unused'), (2, 'handled'), (3, 'stored-but-unused')):
-                out[base + lane * 4] = dict(cls=cls, label='KNOWN', evidence=ev,
-                    note=('shader epilogue uses only the z lane (GL->[0,1] depth remap); '
-                          'x/y/w are forced to identity, so the RSX viewport scale/offset x,y never reach the draw')
-                         if lane != 2 else 'z lane consumed by the shader epilogue (depth remap)')
+            for lane, cls in ((0, 'handled' if xy else 'stored-but-unused'), (1, 'handled' if xy else 'stored-but-unused'), (2, 'handled'), (3, 'stored-but-unused')):
+                if lane == 2: note = 'z lane consumed by the shader epilogue (depth remap)'
+                elif lane in (0, 1) and xy: note = 'x/y lanes mapped into the epilogue by sf1803_vpx (window = ndc*scale+offset in the D3D viewport)'
+                elif xy: note = 'w lane: no effect on the transform (x/y/z only)'
+                else: note = ('shader epilogue uses only the z lane (GL->[0,1] depth remap); '
+                              'x/y/w are forced to identity, so the RSX viewport scale/offset x,y never reach the draw')
+                e2 = ev + (f', {os.path.basename(backend.path)}:{line_of(backend.code, m4.start())}' if xy else '')
+                out[base + lane * 4] = dict(cls=cls, label='KNOWN', evidence=e2, note=note)
     if 'rsx_vp_set_branch_bits' not in backend.code:
         out[0x1FF8] = dict(cls='stored-but-unused', label='KNOWN',
             evidence=f'{os.path.basename(backend.path)}: no call to rsx_vp_set_branch_bits; rsx_vp_decompiler.c:142-143 keeps s_vp_branch_bits=0; only rsx_draw_engine.c / rsx_live_draw.c set it',
@@ -432,8 +444,8 @@ KNOWN_GAPS = [0x0A68, 0x0A78, 0x0A7C, 0x08CC, 0x08D0, 0x08D4, 0x1D78, 0x1738, 0x
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--src', default='/workspace/faces/src')
-    ap.add_argument('--backend', default='/workspace/faces/sh_work.c',
+    ap.add_argument('--src', default='')
+    ap.add_argument('--backend', default='',
                     help='D3D12 backend source to scan (default: newest working copy)')
     ap.add_argument('--out', default=HERE)
     a = ap.parse_args()

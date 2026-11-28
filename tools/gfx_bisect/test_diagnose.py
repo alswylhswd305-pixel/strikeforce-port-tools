@@ -88,6 +88,9 @@ class TestAlign(unittest.TestCase):
 
 
 class TestDetectors(unittest.TestCase):
+    def setUp(self):
+        _require_cv2()
+
     def test_shadow_acne_stripes(self):
         rng = np.random.default_rng(1)
         ref = np.clip(rng.random((240, 320, 3)) * 0.15 + 0.4, 0, 1).astype(np.float32)
@@ -211,6 +214,9 @@ def csv_rows(path):
 
 
 class TestPairAndBisectHook(unittest.TestCase):
+    def setUp(self):
+        _require_cv2()
+
     def test_compare_pair_writes_outputs(self):
         with tempfile.TemporaryDirectory() as tmp:
             ref = _solid(320, 180, (80, 90, 40))

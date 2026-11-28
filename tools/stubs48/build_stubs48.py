@@ -1256,9 +1256,11 @@ def selftest() -> int:
         paths = val if key == "log_roots" else [val]
         for p in paths:
             s = str(p)
-            if "/workspace/sf-shared" in s or s.startswith("/workspace/sf-stubs48"):
-                raise AssertionError(f"default {key} must not hardcode a box path: {p}")
+            # Repo-relative defaults are fine even if this checkout happens to live
+            # under /workspace/sf-shared. Reject only box paths outside the repo.
             if not s.startswith(str(root)):
+                if "/workspace/sf-shared" in s or s.startswith("/workspace/sf-stubs48") or s.startswith("/workspace/faces"):
+                    raise AssertionError(f"default {key} must not hardcode a box path: {p}")
                 raise AssertionError(f"default {key} is not repo-relative: {p}")
     # Clean error when the report is absent (fresh clone).
     missing = root / "this-file-does-not-exist-stubs48.csv"
